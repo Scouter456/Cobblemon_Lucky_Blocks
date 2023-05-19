@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dusk_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:dusk_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_fire_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:fire_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_leaf_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:leaf_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_moon_stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:moon_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_poke_ball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:poke_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblelucky:cobblemon_lucky_item_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_moon_stone",
+      "has_leaf_stone",
+      "has_dusk_stone",
+      "has_poke_ball",
+      "has_fire_stone",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblelucky:cobblemon_lucky_item_block"
+    ]
+  }
+}
