@@ -26,7 +26,7 @@ public class CobblemonLuckyBlock extends Block {
         if(level.isClientSide) return false;
         try {
             PokemonProperties randomProp = PokemonProperties.Companion.parse("species=random", " ", "=");
-            randomProp.setLevel(level.random.nextInt(0,100));
+            randomProp.setLevel(level.random.nextInt(1,100));
             PokemonEntity pokemon = randomProp.create().sendOut((ServerLevel) level, Vec3.atCenterOf(pos), (m) -> null);
 
         } catch (Exception e){
