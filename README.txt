@@ -1,1 +1,0 @@
-A Lucky Block Mod for cobblemon!

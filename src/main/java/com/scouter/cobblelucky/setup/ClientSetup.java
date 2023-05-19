@@ -1,18 +1,30 @@
 package com.scouter.cobblelucky.setup;
 
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.minecraft.client.renderer.RenderType;
+import com.scouter.cobblelucky.blocks.CLBlocks;
 
-import com.scouter.cobblelucky.CobbleLucky;
-import com.scouter.cobblelucky.client.renderer.RenderLayerRegistration;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+public class ClientSetup implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        RenderLayerRegistration();
+    }
 
-@Mod.EventBusSubscriber(modid = CobbleLucky.MODID, value = Dist.CLIENT,bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientSetup {
 
-    public static void init(FMLClientSetupEvent event){
-        RenderLayerRegistration.init();
+    public static void RenderLayerRegistration(){
+        RenderType cutoutMipped = RenderType.cutoutMipped();
+        RenderType cutout = RenderType.cutout();
+        RenderType translucent = RenderType.translucent();
+        RenderType translucentnocrumb = RenderType.translucentNoCrumbling();
+        RenderType solid = RenderType.solid();
+
+        BlockRenderLayerMap.INSTANCE.putBlock(CLBlocks.COBBLEMON_LUCKY_BLOCK, cutout);
+        BlockRenderLayerMap.INSTANCE.putBlock(CLBlocks.COBBLEMON_LUCKY_ITEM_BLOCK, cutout);
+
+
+    }
+    public static void init(){
 
     }
 }
-

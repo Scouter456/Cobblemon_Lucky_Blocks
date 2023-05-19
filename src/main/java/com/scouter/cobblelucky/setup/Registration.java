@@ -1,30 +1,30 @@
 package com.scouter.cobblelucky.setup;
 
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.blocks.CLBlocks;
+import com.scouter.cobblelucky.CobbleLucky;
 import com.scouter.cobblelucky.items.CLItems;
-import com.scouter.cobblelucky.lootmodifier.CLLootModifiers;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import com.scouter.cobblelucky.blocks.CLBlocks;
 import org.slf4j.Logger;
 
-import static com.scouter.cobblelucky.items.CLItems.creativeTab;
+import java.util.Optional;
 
 
 public class Registration {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static  Optional<ItemStack> COBBLEMON_LUCKY_BLOCK;
+    private static Optional<ItemStack> GUARDIAN_SOUP;
     public static void init(){
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        CLItems.ITEMS.register(bus);
-        CLBlocks.BLOCKS.register(bus);
-        CLLootModifiers.LOOT_MODIFIER.register(bus);
+        COBBLEMON_LUCKY_BLOCK = Optional.ofNullable(new ItemStack(CLItems.COBBLEMON_LUCKY_BLOCK));
+        CLItems.ITEMS();
+        CLBlocks.BLOCKS();
+
+
 
     }
 
-    public static final Item.Properties defaultBuilder() {
-        return new Item.Properties().tab(creativeTab);
-    }
-
+    public static CreativeModeTab defaultBuilder = FabricItemGroupBuilder.build(CobbleLucky.prefix("cobblemon_lucky_block"), () -> COBBLEMON_LUCKY_BLOCK.get());
 }
