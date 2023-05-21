@@ -1,0 +1,15 @@
+{
+  "species": "diglett",
+  "waves": 5,
+  "spawns_per_wave": 3,
+  "spawn_range": 25,
+  "experience_reward": 100,
+  "rewards": [
+    "cobblemon:dive_ball",
+    "cobblemon:dive_ball",
+    "cobblemon:kings_rock",
+    "cobblemon:kings_rock",
+    "cobblemon:rare_candy",
+    "cobblemon:rare_candy"
+  ]
+}

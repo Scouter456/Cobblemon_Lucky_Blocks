@@ -1,0 +1,13 @@
+{
+  "species": "spiritomb",
+  "waves": 8,
+  "spawns_per_wave": 2,
+  "spawn_range": 25,
+  "experience_reward": 2000,
+  "shiny_chance": 512,
+  "rewards": [
+    "cobblemon:rare_candy",
+    "cobblemon:rare_candy",
+    "cobblemon:rare_candy"
+  ]
+}

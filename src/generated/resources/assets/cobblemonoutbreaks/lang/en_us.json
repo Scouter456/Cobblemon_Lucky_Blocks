@@ -1,0 +1,6 @@
+{
+  "cobblemonoutbreaks.gate_failed_spawning": "An outbreak with %s has been removed since no suitable spawning points could be found",
+  "cobblemonoutbreaks.gate_finished": "The outbreak with %s has finished!",
+  "cobblemonoutbreaks.gate_time_finished": "You have failed to finish the %s outbreak in time!",
+  "cobblemonoutbreaks.portal_spawn_near": "An outbreak has spawned close to you with a "
+}

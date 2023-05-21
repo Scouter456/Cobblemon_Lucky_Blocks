@@ -1,0 +1,12 @@
+{
+  "species": "bounsweet",
+  "waves": 5,
+  "spawns_per_wave": 3,
+  "spawn_range": 25,
+  "rewards": [
+    "minecraft:poppy",
+    "cobblemon:pink_apricorn",
+    "cobblemon:pink_apricorn",
+    "cobblemon:pink_apricorn"
+  ]
+}

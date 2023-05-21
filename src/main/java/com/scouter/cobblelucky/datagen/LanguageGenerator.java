@@ -1,9 +1,7 @@
 package com.scouter.cobblelucky.datagen;
 
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.CobbleLucky;
-import com.scouter.cobblelucky.blocks.CLBlocks;
-import com.scouter.cobblelucky.items.CLItems;
+import com.scouter.cobblelucky.CobblemonOutbreaks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.alchemy.Potion;
@@ -14,25 +12,20 @@ import java.util.function.Supplier;
 
 public class LanguageGenerator extends LanguageProvider {
     public LanguageGenerator(DataGenerator gen){
-        super(gen, CobbleLucky.MODID, "en_us");
+        super(gen, CobblemonOutbreaks.MODID, "en_us");
     }
     private static final Logger LOGGER = LogUtils.getLogger();
     @Override
     protected void addTranslations(){
-
-        //BLOCKS
-        addBlock(CLBlocks.COBBLEMON_LUCKY_BLOCK, "Cobblemon Lucky Block");
-        addBlock(CLBlocks.COBBLEMON_LUCKY_ITEM_BLOCK, "Cobblemon Lucky Item Block");
-
-        //TABS
-        addTabName(CLItems.creativeTab, "Cobblemon Lucky Blocks");
-
-        add("cobblelucky.item_fail.get", "You failed to obtain an item!");
+        add("cobblemonoutbreaks.portal_spawn_near", "An outbreak has spawned close to you with a ");
+        add("cobblemonoutbreaks.gate_finished", "The outbreak with %s has finished!");
+        add("cobblemonoutbreaks.gate_failed_spawning", "An outbreak with %s has been removed since no suitable spawning points could be found");
+        add("cobblemonoutbreaks.gate_time_finished", "You have failed to finish the %s outbreak in time!");
     }
 
     @Override
     public String getName() {
-        return "Cobblemon Lucky Block Languages: en_us";
+        return "Cobblemon Outbreaks Languages: en_us";
     }
 
     public void addTabName(CreativeModeTab key, String name){

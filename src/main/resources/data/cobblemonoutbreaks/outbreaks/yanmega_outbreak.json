@@ -1,0 +1,10 @@
+{
+  "species": "yanmega",
+  "waves": 2,
+  "spawns_per_wave": 2,
+  "spawn_range": 25,
+  "rewards": [
+    "cobblemon:leaf_stone",
+    "cobblemon:hard_stone"
+  ]
+}

@@ -1,13 +1,13 @@
 package com.scouter.cobblelucky.datagen;
 
-import com.scouter.cobblelucky.CobbleLucky;
+import com.scouter.cobblelucky.CobblemonOutbreaks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class BlockTagsGenerator extends BlockTagsProvider {
     public BlockTagsGenerator(DataGenerator generator, ExistingFileHelper helper) {
-        super(generator, CobbleLucky.MODID, helper);
+        super(generator, CobblemonOutbreaks.MODID, helper);
     }
 
     @Override
@@ -17,5 +17,5 @@ public class BlockTagsGenerator extends BlockTagsProvider {
 
 
     @Override
-    public String getName() { return "Cobblemon Lucky Blocks, Block Tags";}
+    public String getName() { return "Cobblemon Outbreaks, Block Tags";}
 }

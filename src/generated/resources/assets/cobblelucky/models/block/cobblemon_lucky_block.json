@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "cobblelucky:block/cobblemon_lucky_block"
-  }
-}

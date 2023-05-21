@@ -1,0 +1,10 @@
+{
+  "species": "geodude",
+  "waves": 4,
+  "spawns_per_wave": 4,
+  "spawn_range": 20,
+  "rewards": [
+    "cobblemon:rare_candy",
+    "cobblemon:rare_candy"
+  ]
+}

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Set;
 
-import static com.scouter.cobblelucky.CobbleLucky.MODID;
+import static com.scouter.cobblelucky.CobblemonOutbreaks.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 
@@ -36,10 +36,7 @@ public class DataGenerators {
         ExistingFileHelper helper = evt.getExistingFileHelper();
         BlockTagsGenerator blockTags = new BlockTagsGenerator(generator, helper);
         Set<BlockStateGenerator> set = Sets.newHashSet();
-        generator.addProvider(true,new RecipeGenerator(generator));
-        generator.addProvider(true,new BlockstateGenerator(generator, helper));
         generator.addProvider(true,new ItemTagsGenerator(generator, blockTags, helper));
-        generator.addProvider(true,new ItemModelGenerator(generator, helper));
         generator.addProvider(true, new LanguageGenerator(generator));
     }
 }

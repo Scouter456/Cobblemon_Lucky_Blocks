@@ -1,0 +1,9 @@
+{
+  "species": "haunter",
+  "waves": 3,
+  "spawns_per_wave": 5,
+  "spawn_range": 25,
+  "rewards": [
+    "cobblemon:link_cable"
+  ]
+}
