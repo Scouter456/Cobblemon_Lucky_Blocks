@@ -18,10 +18,7 @@ Example
   "experience_reward": 0,
   "spawn_range": 25.0,
   "leash_range": 32.0,
-  "spawn_algorithm": {
-    "type": "open_field",
-    "parameters": {}
-  },
+  "spawn_algorithm": "open_field"
   "gate_timer": 36000
 
 }
