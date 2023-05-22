@@ -1,6 +1,6 @@
-package com.scouter.cobblelucky.config;
+package com.scouter.cobbleoutbreaks.config;
 
-import com.scouter.cobblelucky.CobblemonOutbreaks;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class CobblemonOutbreaksConfig {

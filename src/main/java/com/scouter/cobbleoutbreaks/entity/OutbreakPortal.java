@@ -1,4 +1,4 @@
-package com.scouter.cobblelucky.entity;
+package com.scouter.cobbleoutbreaks.entity;
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.scouter.cobblelucky.config.CobblemonOutbreaksConfig;
+import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class OutbreakPortal {
     private static final Logger LOGGER = LogUtils.getLogger();

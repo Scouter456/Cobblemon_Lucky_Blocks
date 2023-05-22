@@ -1,15 +1,10 @@
-package com.scouter.cobblelucky.datagen;
+package com.scouter.cobbleoutbreaks.datagen;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.scouter.cobblelucky.CobblemonOutbreaks;
-import com.scouter.cobblelucky.util.COTags;
-import net.minecraft.core.Registry;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 

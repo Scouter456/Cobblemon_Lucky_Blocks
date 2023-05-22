@@ -1,4 +1,4 @@
-package com.scouter.cobblelucky.util;
+package com.scouter.cobbleoutbreaks.util;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -7,7 +7,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class COTags {
     public static class Blocks {

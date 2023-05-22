@@ -1,10 +1,10 @@
-package com.scouter.cobblelucky.entity;
+package com.scouter.cobbleoutbreaks.entity;
 
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.config.CobblemonOutbreaksConfig;
-import com.scouter.cobblelucky.data.OutbreaksJsonDataManager;
-import com.scouter.cobblelucky.data.PokemonOutbreakManager;
+import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
+import com.scouter.cobbleoutbreaks.data.OutbreaksJsonDataManager;
+import com.scouter.cobbleoutbreaks.data.PokemonOutbreakManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpawnData {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -56,9 +56,15 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     private PokemonOutbreakManager outbreakManager;
     private OutbreakPortal portal;
     private ResourceLocation resourceLocation;
-    private boolean spawnParticles;
     private static Map<ResourceLocation, OutbreakPortal> map;
 
+
+    public OutbreakPortalEntity(Level level, Player placer,  ResourceLocation resourceLocation){
+        super(COEntity.OUTBREAK_PORTAL.get(), level);
+        populatePortalFromCommand(resourceLocation);
+        sendMessageToPlayer(placer);
+        this.ownerUUID = placer.getUUID();
+    }
 
     public OutbreakPortalEntity(Level level, Player placer) {
         super(COEntity.OUTBREAK_PORTAL.get(), level);
@@ -67,12 +73,10 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         sendMessageToPlayer(placer);
         outbreakSpawnSound();
         this.ownerUUID = placer.getUUID();
-        this.spawnParticles = CobblemonOutbreaksConfig.SPAWN_PORTAL_PARTICLES.get();
     }
 
     public OutbreakPortalEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
-        populatePortal();
     }
 
 
@@ -81,6 +85,14 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
             this.map = OutbreaksJsonDataManager.getRandomPortal(level);
             this.resourceLocation = map.keySet().stream().toList().get(0);
             this.portal = map.get(resourceLocation);
+            this.outbreakManager = PokemonOutbreakManager.get((ServerLevel) level);
+        }
+    }
+
+    public void populatePortalFromCommand(ResourceLocation resourceLocation){
+        if (!this.level.isClientSide) {
+            this.resourceLocation = resourceLocation;
+            this.portal = OutbreaksJsonDataManager.getPortalFromRl(resourceLocation, null);
             this.outbreakManager = PokemonOutbreakManager.get((ServerLevel) level);
         }
     }
@@ -144,7 +156,7 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
                 } else {
                     if(this.ownerUUID != null && CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
                         MutableComponent argsComponent = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
-                        MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_finished", argsComponent).withStyle(ChatFormatting.DARK_RED);
+                        MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_finished", argsComponent).withStyle(ChatFormatting.GREEN);
                         this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
                     }
                 }
@@ -222,14 +234,17 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         this.entityData.define(MAX_WAVE, 0);
 
         this.entityData.define(HAS_SPAWNED_ONE, false);
-        this.spawnParticles = CobblemonOutbreaksConfig.SPAWN_PORTAL_PARTICLES.get();
+        //this.spawnParticles = CobblemonOutbreaksConfig.SPAWN_PORTAL_PARTICLES.get();
     }
 
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
+        if(resourceLocation == null){
+            resourceLocation = prefix(tag.getString("gateLoc"));
+        }
         this.portal = OutbreaksJsonDataManager.getPortalFromRl(prefix(tag.getString("gateLoc")), portal);
-        this.spawnParticles = tag.getBoolean("spawnParticles");
+        //this.spawnParticles = tag.getBoolean("spawnParticles");
         if (this.ownerUUID != null) {
             tag.putUUID("Owner", this.ownerUUID);
         }

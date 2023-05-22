@@ -1,7 +1,7 @@
-package com.scouter.cobblelucky.datagen;
+package com.scouter.cobbleoutbreaks.datagen;
 
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.CobblemonOutbreaks;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.alchemy.Potion;

@@ -1,7 +1,7 @@
-package com.scouter.cobblelucky.setup;
+package com.scouter.cobbleoutbreaks.setup;
 
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.entity.COEntity;
+import com.scouter.cobbleoutbreaks.entity.COEntity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;

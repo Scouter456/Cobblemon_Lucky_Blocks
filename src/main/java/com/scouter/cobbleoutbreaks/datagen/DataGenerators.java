@@ -1,4 +1,4 @@
-package com.scouter.cobblelucky.datagen;
+package com.scouter.cobbleoutbreaks.datagen;
 
 import com.google.common.collect.Sets;
 import net.minecraft.data.DataGenerator;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Set;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.MODID;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 

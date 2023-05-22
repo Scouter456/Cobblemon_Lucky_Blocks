@@ -5,7 +5,7 @@ Thanks to Shadows of Fire for his GatewaysToEternity: https://github.com/Shadows
 Example
 {
   "species": "gastly",
-  "max_pokemon_level": 100
+  "max_pokemon_level": 100,
   "waves": 3,
   "spawns_per_wave": 5,
   "rewards": [
@@ -18,10 +18,7 @@ Example
   "experience_reward": 0,
   "spawn_range": 25.0,
   "leash_range": 32.0,
-  "spawn_algorithm": {
-    "type": "open_field",
-    "parameters": {}
-  },
+  "spawn_algorithm": "open_field",
   "gate_timer": 36000
 
 }

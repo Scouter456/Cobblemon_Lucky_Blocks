@@ -1,9 +1,9 @@
-package com.scouter.cobblelucky.setup;
+package com.scouter.cobbleoutbreaks.setup;
 
 
-import com.scouter.cobblelucky.CobblemonOutbreaks;
-import com.scouter.cobblelucky.entity.COEntity;
-import com.scouter.cobblelucky.entity.OutbreakPortalRenderer;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
+import com.scouter.cobbleoutbreaks.entity.COEntity;
+import com.scouter.cobbleoutbreaks.entity.OutbreakPortalRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
