@@ -1,13 +1,13 @@
-package com.scouter.cobblelucky.entity;
+package com.scouter.cobbleoutbreaks.entity;
 
-import com.scouter.cobblelucky.CobblemonOutbreaks;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class COEntity {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, CobblemonOutbreaks.MODID);

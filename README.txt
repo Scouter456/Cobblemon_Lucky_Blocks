@@ -5,7 +5,7 @@ Thanks to Shadows of Fire for his GatewaysToEternity: https://github.com/Shadows
 Example
 {
   "species": "gastly",
-  "max_pokemon_level": 100
+  "max_pokemon_level": 100,
   "waves": 3,
   "spawns_per_wave": 5,
   "rewards": [
@@ -17,11 +17,9 @@ Example
   "shiny_chance": 1024.0,
   "experience_reward": 0,
   "spawn_range": 25.0,
-  "leash_range": 32.0,
-  "spawn_algorithm": "open_field"
+  "spawn_algorithm": "open_field",
   "gate_timer": 36000
 
-}
 
 "species": [Mandatory] Represents the species of the entity associated with the outbreak portal. It is a string value.
 "max_pokemon_level": Indicates the max level of the pokemon that will spawn in the outbreak if none are speficied it will default to 100, needs to be within 2 to 100.

@@ -1,6 +1,6 @@
-package com.scouter.cobblelucky.datagen;
+package com.scouter.cobbleoutbreaks.datagen;
 
-import com.scouter.cobblelucky.CobblemonOutbreaks;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;

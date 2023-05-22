@@ -1,13 +1,10 @@
-package com.scouter.cobblelucky.entity;
+package com.scouter.cobbleoutbreaks.entity;
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.mojang.logging.LogUtils;
-import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
-import com.scouter.cobblelucky.CobblemonOutbreaks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +17,7 @@ import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class SpawnAlgorithms {
     public interface SpawnAlgorithm {

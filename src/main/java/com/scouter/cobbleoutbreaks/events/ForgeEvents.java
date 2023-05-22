@@ -1,27 +1,18 @@
-package com.scouter.cobblelucky.events;
+package com.scouter.cobbleoutbreaks.events;
 
-import com.cobblemon.mod.common.api.Priority;
-import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.events.pokemon.PokemonCapturedEvent;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.CobblemonOutbreaks;
-import com.scouter.cobblelucky.config.CobblemonOutbreaksConfig;
-import com.scouter.cobblelucky.data.OutbreakPlayerManager;
-import com.scouter.cobblelucky.data.OutbreaksJsonDataManager;
-import com.scouter.cobblelucky.entity.OutbreakPortal;
-import com.scouter.cobblelucky.entity.OutbreakPortalEntity;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
+import com.scouter.cobbleoutbreaks.command.OutbreakPortalCommand;
+import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
+import com.scouter.cobbleoutbreaks.data.OutbreakPlayerManager;
+import com.scouter.cobbleoutbreaks.data.OutbreaksJsonDataManager;
+import com.scouter.cobbleoutbreaks.entity.OutbreakPortalEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
-
-import java.util.UUID;
 
 
 public class ForgeEvents {
@@ -72,7 +63,6 @@ public class ForgeEvents {
     public static void onRegisterReloadListeners(AddReloadListenerEvent event){
         event.addListener(new OutbreaksJsonDataManager());
     }
-
 
 
 }

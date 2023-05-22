@@ -1,11 +1,10 @@
-package com.scouter.cobblelucky.data;
+package com.scouter.cobbleoutbreaks.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import com.scouter.cobblelucky.entity.OutbreakPortal;
-import com.scouter.cobblelucky.entity.OutbreakPortalEntity;
+import com.scouter.cobbleoutbreaks.entity.OutbreakPortal;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -18,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.scouter.cobblelucky.CobblemonOutbreaks.prefix;
+import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
 
@@ -87,8 +86,6 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
 
         this.resourceLocationList.addAll(newResourceLocationList);
         this.data = newMap;
-        LOGGER.info("map " + data);
-        LOGGER.info("rl " + resourceLocationList);
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.data.size());
     }
 }

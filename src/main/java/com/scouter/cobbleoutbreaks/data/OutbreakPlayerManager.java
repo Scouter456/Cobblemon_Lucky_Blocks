@@ -1,4 +1,4 @@
-package com.scouter.cobblelucky.data;
+package com.scouter.cobbleoutbreaks.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

@@ -1,31 +1,29 @@
-package com.scouter.cobblelucky;
+package com.scouter.cobbleoutbreaks;
 
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.mojang.logging.LogUtils;
-import com.scouter.cobblelucky.config.CobblemonOutbreaksConfig;
-import com.scouter.cobblelucky.data.OutbreaksJsonDataManager;
-import com.scouter.cobblelucky.data.PokemonOutbreakManager;
-import com.scouter.cobblelucky.entity.OutbreakPortalEntity;
-import com.scouter.cobblelucky.events.ForgeEvents;
-import com.scouter.cobblelucky.setup.ClientSetup;
-import com.scouter.cobblelucky.setup.ModSetup;
-import com.scouter.cobblelucky.setup.Registration;
-import net.minecraft.nbt.CompoundTag;
+import com.scouter.cobbleoutbreaks.command.OutbreakPortalCommand;
+import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
+import com.scouter.cobbleoutbreaks.data.PokemonOutbreakManager;
+import com.scouter.cobbleoutbreaks.entity.OutbreakPortalEntity;
+import com.scouter.cobbleoutbreaks.events.ForgeEvents;
+import com.scouter.cobbleoutbreaks.setup.ClientSetup;
+import com.scouter.cobbleoutbreaks.setup.ModSetup;
+import com.scouter.cobbleoutbreaks.setup.Registration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
@@ -47,6 +45,7 @@ public class CobblemonOutbreaks {
         modbus.addListener(ModSetup::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
         MinecraftForge.EVENT_BUS.register(ForgeEvents.class);
+        MinecraftForge.EVENT_BUS.addListener(this::commands);
         CobblemonOutbreaks.pokemonCapture();
         CobblemonOutbreaks.pokemonKO();
     }
@@ -55,7 +54,9 @@ public class CobblemonOutbreaks {
         return new ResourceLocation(MODID, name.toLowerCase(Locale.ROOT));
     }
 
-
+    public void commands(RegisterCommandsEvent e) {
+        OutbreakPortalCommand.register(e.getDispatcher());
+    }
     /**
      * Subscribes to the POKEMON_CAPTURED event and performs actions when a Pokémon is captured.
      * Checks if the captured Pokémon UUID is present in the outbreak manager's map.
@@ -70,7 +71,9 @@ public class CobblemonOutbreaks {
             if (!outbreakManager.containsUUID(pokemonUUID)) return null;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
             OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
-            outbreakPortal.removeFromSet(pokemonUUID);
+            if(outbreakPortal != null) {
+                outbreakPortal.removeFromSet(pokemonUUID);
+            }
             outbreakManager.removePokemonUUID(pokemonUUID);
             //LOGGER.info("This one was from a portal and captured!");
             return null;
@@ -91,7 +94,9 @@ public class CobblemonOutbreaks {
             if (!outbreakManager.containsUUID(pokemonUUID)) return null;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
             OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
-            outbreakPortal.removeFromSet(pokemonUUID);
+            if(outbreakPortal != null) {
+                outbreakPortal.removeFromSet(pokemonUUID);
+            }
             outbreakManager.removePokemonUUID(pokemonUUID);
             //LOGGER.info("This one fainted!");
             return null;
