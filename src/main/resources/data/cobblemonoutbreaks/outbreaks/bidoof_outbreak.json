@@ -2,5 +2,12 @@
   "species": "bidoof",
   "waves": 3,
   "spawns_per_wave": 5,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:river",
+    "minecraft:swamp",
+    "minecraft:frozen_river",
+    "minecraft:beach",
+    "minecraft:deep_ocean"
+  ]
 }

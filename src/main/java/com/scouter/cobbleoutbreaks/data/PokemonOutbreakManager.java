@@ -15,7 +15,7 @@ public class PokemonOutbreakManager extends SavedData {
 
     // Map to store the ownership information of Pokemon
     private Map<UUID, UUID> pokemonOwnershipMap = new HashMap<>();
-
+    private Map<UUID, UUID> pokemonOwnerShipMapTemp = new HashMap<>();
     public static PokemonOutbreakManager get(Level level){
         if (level.isClientSide) {
             throw new RuntimeException("Don't access this client-side!");
@@ -24,6 +24,12 @@ public class PokemonOutbreakManager extends SavedData {
         DimensionDataStorage storage = ((ServerLevel)level).getDataStorage();
         // Get the PokemonOutbreakManager if it already exists. Otherwise, create a new one.
         return storage.computeIfAbsent(PokemonOutbreakManager::new, PokemonOutbreakManager::new, "pokemonoutbreakmanager");
+    }
+
+    public void clearMap(){
+        pokemonOwnershipMap.clear();
+        setDirty();
+        return;
     }
 
     public boolean containsUUID(UUID pokemon){
@@ -44,6 +50,30 @@ public class PokemonOutbreakManager extends SavedData {
         setDirty();
     }
 
+    public void clearTempMap(){
+        pokemonOwnerShipMapTemp.clear();
+        setDirty();
+        return;
+    }
+
+    public boolean containsUUIDTemp(UUID pokemon){
+        return pokemonOwnerShipMapTemp.containsKey(pokemon);
+    }
+
+    public UUID getOwnerUUIDTemp(UUID pokemonUUID){
+        return pokemonOwnerShipMapTemp.get(pokemonUUID);
+    }
+
+    public void addPokemonWOwnerTemp(UUID pokemonUUID, UUID ownerUUID){
+        pokemonOwnerShipMapTemp.put(pokemonUUID, ownerUUID);
+        setDirty();
+    }
+
+    public void removePokemonUUIDTemp(UUID pokemonUUID){
+        pokemonOwnerShipMapTemp.remove(pokemonUUID);
+        setDirty();
+    }
+
     public PokemonOutbreakManager(){
     }
 
@@ -55,6 +85,14 @@ public class PokemonOutbreakManager extends SavedData {
             UUID pokemonUUID = pokemonEntry.getUUID("pokemonUUID");
             UUID ownerUUID = pokemonEntry.getUUID("ownerUUID");
             pokemonOwnershipMap.put(pokemonUUID, ownerUUID);
+        }
+
+        ListTag pokemonListTemp = nbt.getList("pokemonListTemp", 10);
+        for (int i = 0; i < pokemonListTemp.size(); i++) {
+            CompoundTag pokemonEntry = pokemonListTemp.getCompound(i);
+            UUID pokemonUUID = pokemonEntry.getUUID("pokemonUUID");
+            UUID ownerUUID = pokemonEntry.getUUID("ownerUUID");
+            pokemonOwnerShipMapTemp.put(pokemonUUID, ownerUUID);
         }
     }
 
@@ -69,6 +107,17 @@ public class PokemonOutbreakManager extends SavedData {
             pokemonList.add(pokemonEntry);
         }
         nbt.put("pokemonList", pokemonList);
+
+        ListTag pokemonListTemp = new ListTag();
+        for (Map.Entry<UUID, UUID> entry : pokemonOwnerShipMapTemp.entrySet()) {
+            CompoundTag pokemonEntryTemp = new CompoundTag();
+            pokemonEntryTemp.putUUID("pokemonUUID", entry.getKey());
+            pokemonEntryTemp.putUUID("ownerUUID", entry.getValue());
+            pokemonListTemp.add(pokemonEntryTemp);
+        }
+
+        nbt.put("pokemonListTemp", pokemonListTemp);
+
         return nbt;
     }
 

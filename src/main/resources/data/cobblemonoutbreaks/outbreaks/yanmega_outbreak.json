@@ -6,5 +6,11 @@
   "rewards": [
     "cobblemon:leaf_stone",
     "cobblemon:hard_stone"
+  ],
+  "biome": [
+    "minecraft:river",
+    "minecraft:frozen_river",
+    "minecraft:mangrove_swamp",
+    "minecraft:swamp"
   ]
 }

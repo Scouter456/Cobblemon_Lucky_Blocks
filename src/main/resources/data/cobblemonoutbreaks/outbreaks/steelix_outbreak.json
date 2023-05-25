@@ -2,5 +2,14 @@
   "species": "steelix",
   "waves": 6,
   "spawns_per_wave": 2,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:plains",
+    "minecraft:forest",
+    "minecraft:meadow",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:stony_peaks",
+    "minecraft:snowy_slopes"
+  ]
 }

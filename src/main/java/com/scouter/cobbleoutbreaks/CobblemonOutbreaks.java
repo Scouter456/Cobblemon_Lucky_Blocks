@@ -18,7 +18,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -87,6 +86,7 @@ public class CobblemonOutbreaks {
      * Finally, removes the Pokémon UUID from the outbreak manager.
      */
     public static void pokemonKO() {
+
         CobblemonEvents.POKEMON_FAINTED.subscribe(Priority.HIGH, event -> {
             ServerLevel serverLevel = ServerLifecycleHooks.getCurrentServer().getLevel(Level.OVERWORLD);
             PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);

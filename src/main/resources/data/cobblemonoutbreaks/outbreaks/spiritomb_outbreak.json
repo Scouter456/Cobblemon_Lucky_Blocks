@@ -9,5 +9,8 @@
     "cobblemon:rare_candy",
     "cobblemon:rare_candy",
     "cobblemon:rare_candy"
+  ],
+  "biome": [
+    "minecraft:deep_dark"
   ]
 }

@@ -2,5 +2,13 @@
   "species": "kricketot",
   "waves": 5,
   "spawns_per_wave": 3,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:forest",
+    "minecraft:flower_forest",
+    "minecraft:birch_forest",
+    "minecraft:old_growth_birch_forest",
+    "minecraft:dark_forest",
+    "minecraft:grove"
+  ]
 }

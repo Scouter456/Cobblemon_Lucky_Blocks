@@ -2,5 +2,10 @@
   "species": "litten",
   "waves": 5,
   "spawns_per_wave": 3,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:bamboo_jungle",
+    "minecraft:jungle",
+    "minecraft:sparse_jungle"
+  ]
 }

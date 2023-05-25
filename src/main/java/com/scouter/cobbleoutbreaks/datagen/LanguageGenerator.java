@@ -21,6 +21,8 @@ public class LanguageGenerator extends LanguageProvider {
         add("cobblemonoutbreaks.gate_finished", "The outbreak with %s has finished!");
         add("cobblemonoutbreaks.gate_failed_spawning", "An outbreak with %s has been removed since no suitable spawning points could be found");
         add("cobblemonoutbreaks.gate_time_finished", "You have failed to finish the %s outbreak in time!");
+        add("cobblemonoutbreaks.gate_not_able_to_load", "Was not able to load outbreak with the following resourcelocation %s, closing the gate!");
+        add("cobblemonoutbreaks.portal_biome_specific_spawn_debug", "An outbreak has spawned near you in a %s with a %s");
     }
 
     @Override

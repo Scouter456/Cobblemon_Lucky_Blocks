@@ -6,5 +6,12 @@
   "rewards": [
     "cobblemon:rare_candy",
     "cobblemon:rare_candy"
+  ],
+  "biome": [
+    "minecraft:meadow",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:stony_peaks",
+    "minecraft:snowy_slopes"
   ]
 }

@@ -3,10 +3,11 @@
   "waves": 5,
   "spawns_per_wave": 3,
   "spawn_range": 25,
-  "rewards": [
-    "minecraft:ice",
-    "cobblemon:blue_apricorn_seed",
-    "cobblemon:blue_apricorn_seed",
-    "cobblemon:blue_apricorn"
+  "biome": [
+    "minecraft:frozen_ocean",
+    "minecraft:frozen_river",
+    "minecraft:snowy_taiga",
+    "minecraft:ice_spikes",
+    "minecraft:snowy_plains"
   ]
 }

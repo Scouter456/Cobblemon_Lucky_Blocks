@@ -1,5 +1,6 @@
 package com.scouter.cobbleoutbreaks.entity;
 
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.logging.LogUtils;
 import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
@@ -68,8 +70,8 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     public OutbreakPortalEntity(Level level, Player placer) {
         super(COEntity.OUTBREAK_PORTAL.get(), level);
-        populatePortal();
         setPos(findSuitableSpawnPoint(placer));
+        populatePortal();
         sendMessageToPlayer(placer);
         outbreakSpawnSound();
         this.ownerUUID = placer.getUUID();
@@ -82,7 +84,13 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     public void populatePortal(){
         if (!this.level.isClientSide) {
-            this.map = OutbreaksJsonDataManager.getRandomPortal(level);
+
+            if(CobblemonOutbreaksConfig.BIOME_SPECIFIC_SPAWNS.get()){
+                this.map = OutbreaksJsonDataManager.getRandomPortalFromBiome(level, this.level.getBiome(this.blockPosition()).unwrapKey().get());
+            } else{
+                this.map = OutbreaksJsonDataManager.getRandomPortal(level);
+            }
+
             this.resourceLocation = map.keySet().stream().toList().get(0);
             this.portal = map.get(resourceLocation);
             this.outbreakManager = PokemonOutbreakManager.get((ServerLevel) level);
@@ -92,7 +100,7 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     public void populatePortalFromCommand(ResourceLocation resourceLocation){
         if (!this.level.isClientSide) {
             this.resourceLocation = resourceLocation;
-            this.portal = OutbreaksJsonDataManager.getPortalFromRl(resourceLocation, null);
+                this.portal = OutbreaksJsonDataManager.getPortalFromRl(resourceLocation, null);
             this.outbreakManager = PokemonOutbreakManager.get((ServerLevel) level);
         }
     }
@@ -100,9 +108,17 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     public void sendMessageToPlayer(Player player){
         if(CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
-            MutableComponent outBreakMessage =  Component.translatable("cobblemonoutbreaks.portal_spawn_near").withStyle(ChatFormatting.DARK_AQUA);
-            MutableComponent pokemonMessage =  Component.translatable(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
-            player.sendSystemMessage(outBreakMessage.append(pokemonMessage));
+            if(CobblemonOutbreaksConfig.BIOME_SPECIFIC_SPAWNS_DEBUG.get()) {
+                MutableComponent pokemonMessage = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                MutableComponent biomeMessage = Component.literal(this.level.getBiome(this.blockPosition()).unwrapKey().get().location().toString().split(":")[1]).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_biome_specific_spawn_debug", biomeMessage,pokemonMessage).withStyle(ChatFormatting.GREEN);
+                player.sendSystemMessage(outBreakMessage);
+            } else{
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_spawn_near").withStyle(ChatFormatting.DARK_AQUA);
+                MutableComponent pokemonMessage =  Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                player.sendSystemMessage(outBreakMessage.append(pokemonMessage));
+            }
+
         }
     }
 
@@ -113,8 +129,15 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     }
 
     public Vec3 findSuitableSpawnPoint(Player player){
-        int maxRange = this.getOutbreakPortal().getMaxSpawnRadius();
-        int minRange = this.getOutbreakPortal().getMinSpawnRadius();
+        int maxRange = CobblemonOutbreaksConfig.MAX_SPAWN_RADIUS.get();
+        int minRange = CobblemonOutbreaksConfig.MIN_SPAWN_RADIUS.get();
+
+        if(maxRange > 112 || maxRange < 49){
+            maxRange = 64;
+        }
+        if(minRange > 48 || minRange < 16){
+            minRange = 32;
+        }
 
         int randomX = this.level.random.nextInt(minRange) + (this.level.random.nextBoolean() ? 5 : -5);
         int randomZ = this.level.random.nextInt(maxRange) + (this.level.random.nextBoolean() ? 5 : -5);
@@ -151,13 +174,13 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
                     if(this.ownerUUID != null && CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
                         MutableComponent argsComponent = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
                         MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_failed_spawning", argsComponent).withStyle(ChatFormatting.DARK_RED);
-                        this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+                        if(this.level.getPlayerByUUID(this.ownerUUID) !=null) this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
                     }
                 } else {
                     if(this.ownerUUID != null && CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
                         MutableComponent argsComponent = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
                         MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_finished", argsComponent).withStyle(ChatFormatting.GREEN);
-                        this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+                        if(this.level.getPlayerByUUID(this.ownerUUID) !=null) this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
                     }
                 }
                 completeOutBreak(true);
@@ -171,7 +194,7 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
                 if(this.ownerUUID != null && CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
                     MutableComponent argsComponent = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
                     MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_time_finished", argsComponent).withStyle(ChatFormatting.RED);
-                    this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+                    if(this.level.getPlayerByUUID(this.ownerUUID) !=null) this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
                 }
                 completeOutBreak(false);
             }
@@ -223,7 +246,16 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     }
 
     public OutbreakPortal getOutbreakPortal() {
-        return portal;
+        if(this.portal != null){
+            return portal;
+        } else{
+            MutableComponent argsComponent = Component.literal(resourceLocation.toString()).withStyle(ChatFormatting.YELLOW);
+            MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_not_able_to_load", argsComponent).withStyle(ChatFormatting.RED);
+            if(this.level.getPlayerByUUID(this.ownerUUID) !=null) this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+            LOGGER.error("Was not able to load outbreak, with the following resourcelocation {}, closing the gate", this.resourceLocation);
+            completeOutBreak(false);
+         return  null;
+        }
     }
 
     @Override
