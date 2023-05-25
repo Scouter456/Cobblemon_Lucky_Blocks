@@ -110,7 +110,13 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
                         newMap.put(key, portal);
                         List<ResourceLocation> spawnBiome = portal.getSpawnBiome();
                         spawnBiome.forEach(biome -> {
-                            ResourceKey<Biome> biomeResourceKey = ForgeRegistries.BIOMES.getHolder(biome).get().unwrapKey().get();
+                            ResourceKey<Biome> biomeResourceKey = null;
+                            try {
+                                biomeResourceKey = ForgeRegistries.BIOMES.getHolder(biome).get().unwrapKey().get();
+                            }catch (Exception e){
+                                LOGGER.error("Could not find biome {} in {} due to ",biome,key, e);
+                            }
+
                             List<ResourceLocation>  resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
                             resourceLocations.add(key);
                             resourceLocationBiomeMap.put(biomeResourceKey, resourceLocations);

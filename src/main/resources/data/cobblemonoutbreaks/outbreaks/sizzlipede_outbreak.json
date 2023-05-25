@@ -6,5 +6,12 @@
   "rewards": [
     "cobblemon:fire_stone",
     "cobblemon:fire_stone"
+  ],
+  "biome": [
+    "minecraft:badlands",
+    "minecraft:eroded_badlands",
+    "minecraft:wooded_badlands",
+    "minecraft:basalt_deltas",
+    "minecraft:nether_wastes"
   ]
 }

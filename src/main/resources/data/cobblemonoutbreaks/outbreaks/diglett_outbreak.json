@@ -7,9 +7,14 @@
   "rewards": [
     "cobblemon:dive_ball",
     "cobblemon:dive_ball",
-    "cobblemon:kings_rock",
-    "cobblemon:kings_rock",
     "cobblemon:rare_candy",
     "cobblemon:rare_candy"
+  ],
+  "biome": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna"
   ]
 }

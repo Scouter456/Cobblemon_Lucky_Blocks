@@ -2,5 +2,14 @@
   "species": "magnemite",
   "waves": 4,
   "spawns_per_wave": 4,
-  "spawn_range": 20
+  "spawn_range": 20,
+  "biome": [
+    "minecraft:plains",
+    "minecraft:forest",
+    "minecraft:meadow",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:stony_peaks",
+    "minecraft:snowy_slopes"
+  ]
 }

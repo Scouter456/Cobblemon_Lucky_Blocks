@@ -5,5 +5,20 @@
   "spawn_range": 25,
   "rewards": [
     "cobblemon:link_cable"
+  ],
+  "biome": [
+    "minecraft:nether_wastes",
+    "minecraft:soul_sand_valley",
+    "minecraft:crimson_forest",
+    "minecraft:warped_forest",
+    "minecraft:basalt_deltas",
+    "minecraft:plains",
+    "minecraft:forest",
+    "minecraft:flower_forest",
+    "minecraft:birch_forest",
+    "minecraft:old_growth_birch_forest",
+    "minecraft:dark_forest",
+    "minecraft:grove",
+    "minecraft:swamp"
   ]
 }

@@ -3,5 +3,15 @@
   "waves": 3,
   "spawns_per_wave": 5,
   "spawn_range": 25,
-  "shiny_chance": 512
+  "shiny_chance": 512,
+  "biome": [
+    "minecraft:basalt_deltas",
+    "minecraft:meadow",
+    "minecraft:frozen_peaks",
+    "minecraft:jagged_peaks",
+    "minecraft:stony_peaks",
+    "minecraft:snowy_slopes",
+    "minecraft:plains",
+    "minecraft:desert"
+  ]
 }

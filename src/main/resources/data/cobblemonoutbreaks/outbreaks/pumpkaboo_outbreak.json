@@ -6,5 +6,10 @@
   "rewards": [
     "cobblemon:rare_candy",
     "cobblemon:rare_candy"
+  ],
+  "biome": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:flower_forest"
   ]
 }

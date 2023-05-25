@@ -8,5 +8,10 @@
     "cobblemon:pink_apricorn",
     "cobblemon:pink_apricorn",
     "cobblemon:pink_apricorn"
+  ],
+  "biome": [
+    "minecraft:jungle",
+    "minecraft:bamboo_jungle",
+    "minecraft:sparse_jungle"
   ]
 }

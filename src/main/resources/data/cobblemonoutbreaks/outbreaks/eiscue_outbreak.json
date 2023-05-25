@@ -2,5 +2,12 @@
   "species": "eiscue",
   "waves": 3,
   "spawns_per_wave": 5,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:frozen_ocean",
+    "minecraft:frozen_river",
+    "minecraft:snowy_taiga",
+    "minecraft:ice_spikes",
+    "minecraft:snowy_plains"
+  ]
 }

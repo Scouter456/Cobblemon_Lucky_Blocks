@@ -2,5 +2,10 @@
   "species": "meganium",
   "waves": 5,
   "spawns_per_wave": 3,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:flower_forest",
+    "minecraft:sunflower_plains",
+    "minecraft:plains"
+  ]
 }

@@ -7,5 +7,11 @@
   "rewards": [
     "cobblemon:red_apricorn_seed",
     "cobblemon:red_apricorn_seed"
+  ],
+  "biome": [
+    "minecraft:lush_caves",
+    "minecraft:mangrove_swamp",
+    "minecraft:swamp",
+    "minecraft:mushroom_fields"
   ]
 }

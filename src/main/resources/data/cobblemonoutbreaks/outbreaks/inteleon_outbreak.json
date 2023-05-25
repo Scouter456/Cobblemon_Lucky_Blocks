@@ -2,5 +2,12 @@
   "species": "inteleon",
   "waves": 5,
   "spawns_per_wave": 3,
-  "spawn_range": 30
+  "spawn_range": 30,
+  "biome": [
+    "minecraft:river",
+    "minecraft:swamp",
+    "minecraft:frozen_river",
+    "minecraft:beach",
+    "minecraft:deep_ocean"
+  ]
 }

@@ -163,8 +163,6 @@ public class OutbreakPortal {
             int maxLevel = outbreakPortalEntity.getOutbreakPortal().getMaxPokemonLevel();
             pokemonProp.setLevel(level.random.nextInt(1, maxLevel));
 
-            // We also create a Pokémon entity to get the bounding boxes since we couldn't find another correct way to do it.
-
 
             // If the species is something it can't find, it will put out a random Pokémon. We try to catch that here,
             // this can be due to an error in the JSON.
@@ -178,6 +176,7 @@ public class OutbreakPortal {
                 pokemonProp.setShiny(true);
                 level.playSound(null, outbreakPortalEntity.getX(), outbreakPortalEntity.getY(), outbreakPortalEntity.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.AMBIENT, 1.5F, 1);
             }
+
             PokemonEntity pokemonEntity = pokemonProp.createEntity(level);
 
             pokemonEntity.setDespawner(despawner);

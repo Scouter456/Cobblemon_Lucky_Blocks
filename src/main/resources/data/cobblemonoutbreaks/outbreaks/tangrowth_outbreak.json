@@ -2,5 +2,10 @@
   "species": "tangrowth",
   "waves": 3,
   "spawns_per_wave": 5,
-  "spawn_range": 25
+  "spawn_range": 25,
+  "biome": [
+    "minecraft:bamboo_jungle",
+    "minecraft:jungle",
+    "minecraft:sparse_jungle"
+  ]
 }
