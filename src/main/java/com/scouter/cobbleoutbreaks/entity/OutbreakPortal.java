@@ -35,7 +35,7 @@ public class OutbreakPortal {
                     Codec.STRING.fieldOf("species").forGetter(t -> t.species),
                     Codec.INT.fieldOf("waves").forGetter(w -> w.waves),
                     Codec.intRange(1, 64).fieldOf("spawns_per_wave").forGetter(s -> s.spawnsPerWave),
-                    ForgeRegistries.ITEMS.getCodec().listOf().optionalFieldOf("rewards", Collections.emptyList()).forGetter(i -> i.rewards),
+                    Registry.ITEM.byNameCodec().listOf().optionalFieldOf("rewards", Collections.emptyList()).forGetter(i -> i.rewards),
                     Codec.doubleRange(1,10000000).optionalFieldOf("shiny_chance",1024D).forGetter(r -> r.shinyChance),
                     Codec.INT.optionalFieldOf("experience_reward", 0).forGetter(e -> e.experience),
                     Codec.doubleRange(15D,40D).fieldOf("spawn_range").forGetter(r -> r.spawnRange),

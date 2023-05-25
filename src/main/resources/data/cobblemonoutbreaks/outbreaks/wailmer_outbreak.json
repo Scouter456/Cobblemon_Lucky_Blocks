@@ -1,0 +1,10 @@
+{
+  "species": "wailmer",
+  "waves": 3,
+  "spawns_per_wave": 5,
+  "spawn_range": 20,
+  "biome": [
+    "minecraft:deep_lukewarm_ocean",
+    "minecraft:lukewarm_ocean"
+  ]
+}

@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortal;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -13,7 +13,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -45,10 +44,6 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
     }
 
 
-    public static Map<ResourceLocation, OutbreakPortal> getData() {
-        return data;
-    }
-
     public static Map<ResourceKey<Biome>, Map<ResourceLocation, OutbreakPortal>> getBiomeData() {
         return biomeData;
     }
@@ -57,11 +52,23 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
         return data.getOrDefault(resourceLocation, outbreakPortal);
     }
 
+    public static Map<ResourceLocation, OutbreakPortal> getData() {
+        return data;
+    }
+
     public static Map<ResourceLocation, OutbreakPortal> getRandomPortalFromBiome(Level level, ResourceKey<Biome> biome) {
         Map<ResourceLocation, OutbreakPortal> map = new HashMap<>();
         ResourceLocation rl = getRandomResourceLocationFromBiome(level, biome);
         Map<ResourceLocation, OutbreakPortal> outbreakPortalMap = biomeData.getOrDefault(biome, new HashMap<>());
-        OutbreakPortal outbreakPortal = outbreakPortalMap.getOrDefault(rl, getPortalFromRl(rl, null));
+        OutbreakPortal outbreakPortal = outbreakPortalMap.getOrDefault(rl, null);
+
+        if(outbreakPortal == null){
+            outbreakPortalMap =  getRandomPortal(level);
+            rl = outbreakPortalMap.keySet().stream().toList().get(0);
+            outbreakPortal = outbreakPortalMap.values().stream().toList().get(0);
+        }
+
+
         map.put(rl, outbreakPortal);
         return map;
     }
@@ -112,11 +119,13 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
                         spawnBiome.forEach(biome -> {
                             ResourceKey<Biome> biomeResourceKey = null;
                             try {
-                                biomeResourceKey = ForgeRegistries.BIOMES.getHolder(biome).get().unwrapKey().get();
+                                biomeResourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome);
                             }catch (Exception e){
                                 LOGGER.error("Could not find biome {} in {} due to ",biome,key, e);
                             }
-
+                            if(biomeResourceKey == null){
+                                LOGGER.error("Could not find biome {} in {}",biome, key);
+                            }
                             List<ResourceLocation>  resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
                             resourceLocations.add(key);
                             resourceLocationBiomeMap.put(biomeResourceKey, resourceLocations);

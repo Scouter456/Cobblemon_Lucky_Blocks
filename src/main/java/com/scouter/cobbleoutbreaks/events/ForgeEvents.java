@@ -46,7 +46,7 @@ public class ForgeEvents {
      */
     @SubscribeEvent
     public static void createOutbreaks(TickEvent.PlayerTickEvent event) {
-        if (!(event.player instanceof ServerPlayer serverPlayer) || serverPlayer.level.isClientSide || event.getPhase().equals(TickEvent.Phase.END)) return;
+        if (!(event.player instanceof ServerPlayer serverPlayer) || serverPlayer.level.isClientSide || event.phase == TickEvent.Phase.END) return;
         OutbreakPlayerManager outbreakPlayerManager = OutbreakPlayerManager.get((ServerLevel) serverPlayer.getLevel());
         // Check if the player's UUID is not present in the outbreak player manager and set the initial timer.
         if (!outbreakPlayerManager.containsUUID(serverPlayer.getUUID()))
@@ -98,6 +98,7 @@ public class ForgeEvents {
         if ((event.level.isClientSide)  || event.getPhase().equals(TickEvent.Phase.END) && flushTimer-- > 0) return;
         PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(event.level);
         outbreakManager.clearTempMap();
+        flushTimer = 72000;
     }
 
 

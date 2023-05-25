@@ -251,7 +251,10 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         } else{
             MutableComponent argsComponent = Component.literal(resourceLocation.toString()).withStyle(ChatFormatting.YELLOW);
             MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_not_able_to_load", argsComponent).withStyle(ChatFormatting.RED);
-            if(this.level.getPlayerByUUID(this.ownerUUID) !=null) this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+            if(this.ownerUUID != null) {
+                if (this.level.getPlayerByUUID(this.ownerUUID) != null)
+                    this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+            }
             LOGGER.error("Was not able to load outbreak, with the following resourcelocation {}, closing the gate", this.resourceLocation);
             completeOutBreak(false);
          return  null;
@@ -276,10 +279,23 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
             resourceLocation = prefix(tag.getString("gateLoc"));
         }
         this.portal = OutbreaksJsonDataManager.getPortalFromRl(prefix(tag.getString("gateLoc")), portal);
-        //this.spawnParticles = tag.getBoolean("spawnParticles");
-        if (this.ownerUUID != null) {
-            tag.putUUID("Owner", this.ownerUUID);
+
+        if(this.portal == null){
+            MutableComponent message = Component.translatable("cobblemonoutbreaks.gate_not_able_to_load").withStyle(ChatFormatting.RED);
+            if(this.ownerUUID != null) {
+                if (this.level.getPlayerByUUID(this.ownerUUID) != null)
+                    this.level.getPlayerByUUID(this.ownerUUID).sendSystemMessage(message);
+            }
+            LOGGER.error("Was not able to load outbreak with the following resourcelocation {}, closing the gate", this.resourceLocation);
+            completeOutBreak(false);
+
+
         }
+
+        if (tag.hasUUID("Owner")) {
+            this.ownerUUID = tag.getUUID("Owner");
+        }
+
         ListTag uuidsTag = tag.getList("current_outbreak_wave_entities", 10);
         for (int i = 0; i < uuidsTag.size(); i++) {
             CompoundTag uuidTag = uuidsTag.getCompound(i);
@@ -304,8 +320,9 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("gateLoc", resourceLocation.toString().replace("cobblemonoutbreaks:", ""));
-        if (tag.hasUUID("Owner")) {
-            this.ownerUUID = tag.getUUID("Owner");
+
+        if (this.ownerUUID != null) {
+            tag.putUUID("Owner", this.ownerUUID);
         }
 
         ListTag uuidsTag = new ListTag();
