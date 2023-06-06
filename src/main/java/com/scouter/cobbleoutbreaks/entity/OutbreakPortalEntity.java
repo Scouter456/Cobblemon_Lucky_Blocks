@@ -278,6 +278,9 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         if(resourceLocation == null){
             resourceLocation = prefix(tag.getString("gateLoc"));
         }
+        if(!level.isClientSide) {
+            this.outbreakManager = PokemonOutbreakManager.get(level);
+        }
         this.portal = OutbreaksJsonDataManager.getPortalFromRl(prefix(tag.getString("gateLoc")), portal);
 
         if(this.portal == null){

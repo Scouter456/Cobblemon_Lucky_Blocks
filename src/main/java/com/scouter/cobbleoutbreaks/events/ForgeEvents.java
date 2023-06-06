@@ -2,18 +2,14 @@ package com.scouter.cobbleoutbreaks.events;
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.mojang.logging.LogUtils;
-import com.scouter.cobbleoutbreaks.command.OutbreakPortalCommand;
 import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
 import com.scouter.cobbleoutbreaks.data.OutbreakPlayerManager;
 import com.scouter.cobbleoutbreaks.data.OutbreaksJsonDataManager;
 import com.scouter.cobbleoutbreaks.data.PokemonOutbreakManager;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortalEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -95,7 +91,7 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void flushOutbreakTempMap(TickEvent.LevelTickEvent event) {
-        if ((event.level.isClientSide)  || event.getPhase().equals(TickEvent.Phase.END) && flushTimer-- > 0) return;
+        if ((event.level.isClientSide)  || event.getPhase().equals(TickEvent.Phase.END) || flushTimer-- > 0) return;
         PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(event.level);
         outbreakManager.clearTempMap();
         flushTimer = 72000;
@@ -106,6 +102,4 @@ public class ForgeEvents {
     public static void onRegisterReloadListeners(AddReloadListenerEvent event){
         event.addListener(new OutbreaksJsonDataManager());
     }
-
-
 }
