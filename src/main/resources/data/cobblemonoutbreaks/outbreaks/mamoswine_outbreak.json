@@ -1,0 +1,14 @@
+{
+  "species": "mamoswine",
+  "waves": 3,
+  "spawns_per_wave": 2,
+  "spawn_range": 30,
+  "biome": [
+    "#cobblemon:is_tundra"
+  ],
+  "experience_reward": 300,
+  "rewards": [
+    "cobblemon:sport_ball",
+    "cobblemon:rare_candy"
+  ]
+}

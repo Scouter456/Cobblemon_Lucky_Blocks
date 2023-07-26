@@ -34,7 +34,9 @@ import java.util.UUID;
 @Mod(CobblemonOutbreaks.MODID)
 public class CobblemonOutbreaks {
     public static final String MODID = "cobblemonoutbreaks";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static ServerLevel serverlevel;
 
     public CobblemonOutbreaks() {
         Registration.init();
@@ -45,24 +47,24 @@ public class CobblemonOutbreaks {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         modbus.addListener(ModSetup::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
-
-        if(FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
-            MinecraftForge.EVENT_BUS.register(ForgeEvents.class);
-            MinecraftForge.EVENT_BUS.addListener(this::commands);
-            CobblemonOutbreaks.pokemonCapture();
-            CobblemonOutbreaks.pokemonKO();
-        }
+        forgeBus.addListener(ForgeEvents::serverStarted);
+        MinecraftForge.EVENT_BUS.addListener(this::commands);
+        MinecraftForge.EVENT_BUS.register(ForgeEvents.class);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::serverStarted);
+        CobblemonOutbreaks.pokemonCapture();
+        CobblemonOutbreaks.pokemonKO();
     }
+
 
     public static ResourceLocation prefix(String name) {
         return new ResourceLocation(MODID, name.toLowerCase(Locale.ROOT));
     }
 
 
-
     public void commands(RegisterCommandsEvent e) {
         OutbreakPortalCommand.register(e.getDispatcher());
     }
+
     /**
      * Subscribes to the POKEMON_CAPTURED event and performs actions when a Pokémon is captured.
      * Checks if the captured Pokémon UUID is present in the outbreak manager's map.
@@ -77,7 +79,7 @@ public class CobblemonOutbreaks {
             if (!outbreakManager.containsUUID(pokemonUUID)) return Unit.INSTANCE;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
             OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
-            if(outbreakPortal != null) {
+            if (outbreakPortal != null) {
                 outbreakPortal.removeFromSet(pokemonUUID);
             }
             outbreakManager.removePokemonUUID(pokemonUUID);
@@ -94,14 +96,14 @@ public class CobblemonOutbreaks {
      */
     public static void pokemonKO() {
         CobblemonEvents.POKEMON_FAINTED.subscribe(Priority.HIGH, event -> {
-            if(event.getPokemon().getOwnerUUID() != null || event.getPokemon() == null) return Unit.INSTANCE;
-            ServerLevel serverLevel = ServerLifecycleHooks.getCurrentServer().getLevel(Level.OVERWORLD);
+            if (event.getPokemon().getOwnerUUID() != null || event.getPokemon() == null || serverlevel == null) return Unit.INSTANCE;
+            ServerLevel serverLevel = serverlevel;
             PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);
             UUID pokemonUUID = event.getPokemon().getUuid();
             if (!outbreakManager.containsUUID(pokemonUUID)) return Unit.INSTANCE;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
             OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
-            if(outbreakPortal != null) {
+            if (outbreakPortal != null) {
                 outbreakPortal.removeFromSet(pokemonUUID);
             }
             outbreakManager.removePokemonUUID(pokemonUUID);

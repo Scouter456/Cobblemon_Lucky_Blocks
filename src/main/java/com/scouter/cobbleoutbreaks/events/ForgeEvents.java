@@ -2,21 +2,31 @@ package com.scouter.cobbleoutbreaks.events;
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.mojang.logging.LogUtils;
+import com.scouter.cobbleoutbreaks.CobblemonOutbreaks;
 import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
 import com.scouter.cobbleoutbreaks.data.OutbreakPlayerManager;
 import com.scouter.cobbleoutbreaks.data.OutbreaksJsonDataManager;
 import com.scouter.cobbleoutbreaks.data.PokemonOutbreakManager;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortalEntity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.slf4j.Logger;
 
 import java.util.UUID;
+
 
 
 public class ForgeEvents {
@@ -55,31 +65,116 @@ public class ForgeEvents {
 
         // Spawn outbreak portals based on the outbreak count.
         for (int i = 0; i < outbreakCount; i++) {
-            OutbreakPortalEntity outbreakPortal = new OutbreakPortalEntity(serverPlayer.getLevel(), serverPlayer);
+
+
+            Vec3 pos = findSuitableSpawnPoint(serverPlayer);
+            int y = (int) pos.y();
+            if(serverPlayer.level.dimension() == Level.NETHER){
+                if(y <= 0){
+                    sendMessageToPlayer(serverPlayer, y);
+                    continue;
+                }
+            }
+            if(serverPlayer.level.dimension() == Level.END){
+                if(y <= 0) {
+                    sendMessageToPlayer(serverPlayer, y);
+                    continue;
+                }
+            }
+            if(serverPlayer.level.dimension() == Level.OVERWORLD){
+                if(y <= -64){
+                    sendMessageToPlayer(serverPlayer, y);
+                    continue;
+                }
+            }
+
+
+            OutbreakPortalEntity outbreakPortal = new OutbreakPortalEntity(serverPlayer.getLevel(), serverPlayer, pos);
             serverPlayer.level.addFreshEntity(outbreakPortal);
         }
         // Reset the timer back to the defined value in the config.
         outbreakPlayerManager.setTimeLeft(serverPlayer.getUUID(), outbreakTimer);
     }
 
+
+    public static Vec3 findSuitableSpawnPoint(Player player){
+        int maxRange = CobblemonOutbreaksConfig.MAX_SPAWN_RADIUS.get();
+        int minRange = CobblemonOutbreaksConfig.MIN_SPAWN_RADIUS.get();
+
+
+
+        if(maxRange > 112 || maxRange < 49){
+            maxRange = 64;
+        }
+        if(minRange > 48 || minRange < 16){
+            minRange = 32;
+        }
+
+        int randomX = player.level.random.nextInt(minRange) + (player.level.random.nextBoolean() ? 5 : -5);
+        int randomZ = player.level.random.nextInt(maxRange) + (player.level.random.nextBoolean() ? 5 : -5);
+
+
+
+        int playerPosX = player.getBlockX();
+        int playerPosY = player.getBlockY();
+        int playerPosZ = player.getBlockZ();
+
+        boolean changeModX = player.level.random.nextBoolean();
+        boolean changeModZ = player.level.random.nextBoolean();
+
+        if(changeModX){
+            randomX = -randomX;
+        }
+
+        if(changeModZ){
+            randomZ = -randomZ;
+        }
+        int y = (int)player.getY();
+        while ((player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
+                (!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && !player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
+                (!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir())) {
+            if(y < -64) break;
+            if(!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).getFluidState().isEmpty()) break;
+            y--;
+        }
+
+        BlockPos blockPos = new BlockPos(playerPosX + randomX, y , playerPosZ + randomZ);
+        return Vec3.atCenterOf(blockPos);
+    }
+
+    public static void sendMessageToPlayer(Player player, int y){
+        if(CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
+            if(CobblemonOutbreaksConfig.BIOME_SPECIFIC_SPAWNS_DEBUG.get()) {
+                MutableComponent yLevel = Component.literal(String.valueOf(y)).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.unlucky_spawn_debug", yLevel).withStyle(ChatFormatting.DARK_AQUA);
+                player.sendSystemMessage(outBreakMessage);
+            } else{
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.unlucky_spawn").withStyle(ChatFormatting.DARK_AQUA);
+                player.sendSystemMessage(outBreakMessage);
+            }
+        }
+    }
+
+
     @SubscribeEvent
     public static void checkDespawn(EntityLeaveLevelEvent event) {
         if(event.getLevel().isClientSide || !(event.getEntity() instanceof PokemonEntity pokemonEntity)) return;
        ServerLevel serverLevel = (ServerLevel) event.getLevel();
        PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);
-       UUID pokemonUUID = pokemonEntity.getPokemon().getUuid();
+       UUID pokemonUUID = pokemonEntity.getUUID();
        if (!outbreakManager.containsUUID(pokemonUUID)) return;
        UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
        outbreakManager.removePokemonUUID(pokemonUUID);
        outbreakManager.addPokemonWOwnerTemp(pokemonUUID, ownerUUID);
        return;
     }
+
     @SubscribeEvent
     public static void checkSpawn(EntityJoinLevelEvent event) {
         if(event.getLevel().isClientSide || !(event.getEntity() instanceof PokemonEntity pokemonEntity) || !event.loadedFromDisk()) return;
         ServerLevel serverLevel = (ServerLevel) event.getLevel();
         PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);
-        UUID pokemonUUID = pokemonEntity.getPokemon().getUuid();
+        UUID pokemonUUID = pokemonEntity.getUUID();
         if (!outbreakManager.containsUUIDTemp(pokemonUUID)) return;
         UUID ownerUUID = outbreakManager.getOwnerUUIDTemp(pokemonUUID);
         outbreakManager.removePokemonUUIDTemp(pokemonUUID);
@@ -87,16 +182,36 @@ public class ForgeEvents {
         return;
     }
 
-    private static int flushTimer = 72000;
+    private static int flushTimerTempMap = CobblemonOutbreaksConfig.TEMP_OUTBREAKS_MAP_FLUSH_TIMER.get();
+    private static int flushTimerMap = CobblemonOutbreaksConfig.OUTBREAKS_MAP_FLUSH_TIMER.get();
 
     @SubscribeEvent
     public static void flushOutbreakTempMap(TickEvent.LevelTickEvent event) {
-        if ((event.level.isClientSide)  || event.getPhase().equals(TickEvent.Phase.END) || flushTimer-- > 0) return;
-        PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(event.level);
-        outbreakManager.clearTempMap();
-        flushTimer = 72000;
+        if ((event.level.isClientSide)  || event.phase == TickEvent.Phase.END) return;
+        ServerLevel serverLevel = (ServerLevel) event.level;
+        tickTempFlushTimer(serverLevel);
+        tickFlushTimer(serverLevel);
     }
 
+    public static void tickTempFlushTimer(ServerLevel serverLevel){
+        if (flushTimerTempMap-- > 0) return;
+        PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);
+        outbreakManager.clearTempMap();
+        flushTimerTempMap =  CobblemonOutbreaksConfig.TEMP_OUTBREAKS_MAP_FLUSH_TIMER.get();
+    }
+
+    public static void tickFlushTimer(ServerLevel serverLevel){
+        if (flushTimerMap-- > 0) return;
+        serverLevel.getServer().getPlayerList().broadcastSystemMessage(Component.translatable("cobblemonoutbreaks.clearing_outbreaks_map").withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC), true);
+        PokemonOutbreakManager outbreakManager = PokemonOutbreakManager.get(serverLevel);
+        outbreakManager.clearTempMap();
+        flushTimerMap =  CobblemonOutbreaksConfig.OUTBREAKS_MAP_FLUSH_TIMER.get();
+    }
+
+    @SubscribeEvent
+    public static void serverStarted(ServerStartingEvent event){
+        CobblemonOutbreaks.serverlevel = event.getServer().getLevel(Level.OVERWORLD);
+    }
 
     @SubscribeEvent
     public static void onRegisterReloadListeners(AddReloadListenerEvent event){

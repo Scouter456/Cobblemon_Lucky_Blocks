@@ -5,11 +5,14 @@ import com.google.gson.JsonElement;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortal;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -63,7 +66,7 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
         OutbreakPortal outbreakPortal = outbreakPortalMap.getOrDefault(rl, null);
 
         if(outbreakPortal == null){
-            outbreakPortalMap =  getRandomPortal(level);
+            outbreakPortalMap = getRandomPortal(level);
             rl = outbreakPortalMap.keySet().stream().toList().get(0);
             outbreakPortal = outbreakPortalMap.values().stream().toList().get(0);
         }
@@ -93,56 +96,115 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
         return resourceLocationList.get(level.random.nextInt(resourceLocationList.size()));
     }
 
+    public static void populateMap(ServerLevel level) {
+        Map<ResourceKey<Biome>, Map<ResourceLocation, OutbreakPortal>> newBiomeData = new HashMap<>();
+        Map<ResourceKey<Biome>, List<ResourceLocation>> resourceLocationBiomeMap = new HashMap<>();
+        for (OutbreakPortal portal : data.values()) {
+            List<ResourceLocation> tagsRL = portal.getSpawnBiomeTags();
+            List<ResourceLocation> biomesRL = portal.getSpawnBiome();
+            for (ResourceLocation tag : tagsRL) {
+                TagKey<Biome> biomeTagKey = TagKey.create(Registry.BIOME_REGISTRY, tag);
+                level.registryAccess().registry(Registry.BIOME_REGISTRY).ifPresent(reg -> {
+                    Iterable<Holder<Biome>> biomeHolder = reg.getTagOrEmpty(biomeTagKey);
+                    for(Holder<Biome> biome : biomeHolder){
+                        ResourceKey<Biome> biomeResourceKey = biome.unwrapKey().get();
+                        Map<ResourceLocation, OutbreakPortal> mapToPut = newBiomeData.computeIfAbsent(biomeResourceKey, k -> new HashMap<>());
+                        mapToPut.put(portal.getJsonLocation(), portal);
+                        newBiomeData.put(biomeResourceKey, mapToPut);
+
+                        List<ResourceLocation> resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
+                        resourceLocations.add(portal.getJsonLocation());
+                        resourceLocationBiomeMap.put(biomeResourceKey, resourceLocations);
+                    }
+
+                    if (!biomeHolder.iterator().hasNext()) {
+                        LOGGER.error("Tag for {} does not have any biomes!", biomeTagKey);
+                        LOGGER.error("Outbreak for {} might not have any biomes assigned!", portal.getJsonLocation());
+                    }
+                });
+            }
+
+            for (ResourceLocation biome : biomesRL) {
+                ResourceKey<Biome> biomeResourceKey = null;
+                try {
+                    biomeResourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome);
+                } catch (Exception e) {
+                    LOGGER.error("Could not find biome {} in portal for {} due to {}", biome, portal.getJsonLocation(), e);
+                }
+                if (biomeResourceKey == null) {
+                    LOGGER.error("Could not find biome {} in portal for {}, skipping!", biome, portal.getJsonLocation());
+                    continue;
+                }
+
+                List<ResourceLocation> resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
+                resourceLocations.add(portal.getJsonLocation());
+                resourceLocationBiomeMap.put(biomeResourceKey, resourceLocations);
+
+                Map<ResourceLocation, OutbreakPortal> mapToPut = newBiomeData.computeIfAbsent(biomeResourceKey, k -> new HashMap<>());
+                mapToPut.put(portal.getJsonLocation(), portal);
+                newBiomeData.put(biomeResourceKey, mapToPut);
+            }
+
+            int minLevel = portal.getMinPokemonLevel();
+            int maxLevel = portal.getMaxPokemonLevel();
+
+            if(minLevel > maxLevel){
+                LOGGER.error("Portal with {}, has a bigger min_pokemon_level than max_pokemon_level", portal.getJsonLocation());
+            }
+        }
+        LOGGER.info("Registered {} biomes with pokemon!", newBiomeData.keySet().size());
+        biomeData.putAll(newBiomeData);
+        resourceLocationMap.putAll(resourceLocationBiomeMap);
+        newBiomeData.clear();
+    }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager pResourceManager, ProfilerFiller pProfiler) {
         LOGGER.info("Beginning loading of data for data loader: {}", this.folderName);
+
         Map<ResourceLocation, OutbreakPortal> newMap = new HashMap<>();
+        List<ResourceLocation> newResourceLocationList = new ArrayList<>();
         Map<ResourceKey<Biome>, List<ResourceLocation>> resourceLocationBiomeMap = new HashMap<>();
         Map<ResourceKey<Biome>, Map<ResourceLocation, OutbreakPortal>> newBiomeData = new HashMap<>();
-        List<ResourceLocation> newResourceLocationList = new ArrayList<>();
         data.clear();
+        biomeData.clear();
+        resourceLocationMap.clear();
         resourceLocationList.clear();
-
         for (Map.Entry<ResourceLocation, JsonElement> entry : jsons.entrySet()) {
             ResourceLocation key = entry.getKey();
             JsonElement element = entry.getValue();
 
             // if we fail to parse json, log an error and continue
-            // if we succeeded, add the resulting T to the map
+            // if we succeeded, add the resulting T to the ma
             OutbreakPortal.CODEC.decode(JsonOps.INSTANCE, element)
                     .get()
                     .ifLeft(result -> {
                         OutbreakPortal portal = result.getFirst();
                         newMap.put(key, portal);
+                        portal.setJsonLocation(key);
                         List<ResourceLocation> spawnBiome = portal.getSpawnBiome();
                         spawnBiome.forEach(biome -> {
                             ResourceKey<Biome> biomeResourceKey = null;
                             try {
                                 biomeResourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome);
-                            }catch (Exception e){
-                                LOGGER.error("Could not find biome {} in {} due to ",biome,key, e);
+                            } catch (Exception e) {
+                                LOGGER.error("Could not find biome {} in {} due to ", biome, key, e);
                             }
-                            if(biomeResourceKey == null){
-                                LOGGER.error("Could not find biome {} in {}",biome, key);
+                            if (biomeResourceKey == null) {
+                                LOGGER.error("Could not find biome {} in {}", biome, key);
                             }
-                            List<ResourceLocation>  resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
+
+                            List<ResourceLocation> resourceLocations = resourceLocationBiomeMap.getOrDefault(biomeResourceKey, new ArrayList<>());
                             resourceLocations.add(key);
                             resourceLocationBiomeMap.put(biomeResourceKey, resourceLocations);
-                            Map<ResourceLocation, OutbreakPortal> mapToPut = newBiomeData.computeIfAbsent(biomeResourceKey, k -> new HashMap<>());
-                            mapToPut.put(key, portal);
-                            newBiomeData.put(biomeResourceKey, mapToPut);
                         });
                         newResourceLocationList.add(key);
                     })
-                    .ifRight(partial -> LOGGER.error("Failed to parse data json for {} due to: {}", entry.getKey(), partial.message()));
-        }
+                    .ifRight(partial -> LOGGER.error("Failed to parse data json for {} due to: {}", key, partial.message()));
 
+        }
         this.resourceLocationList = newResourceLocationList;
         this.data = newMap;
-        this.biomeData = newBiomeData;
-
-        this.resourceLocationMap = resourceLocationBiomeMap;
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.data.size());
     }
 }

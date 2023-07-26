@@ -20,6 +20,7 @@
     "minecraft:sparse_jungle",
     "minecraft:mangrove_swamp",
     "minecraft:swamp",
-    "minecraft:flower_forest"
+    "minecraft:flower_forest",
+    "#cobblemon:is_spooky"
   ]
 }

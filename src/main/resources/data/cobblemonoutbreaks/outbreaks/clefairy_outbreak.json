@@ -1,0 +1,11 @@
+{
+  "species": "clefairy",
+  "waves": 5,
+  "spawns_per_wave": 3,
+  "spawn_range": 25,
+  "biome": [
+    "#cobblemon:is_dripstone",
+    "#cobblemon:is_hills",
+    "#cobblemon:is_magical"
+  ]
+}

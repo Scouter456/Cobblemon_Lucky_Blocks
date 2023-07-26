@@ -1,0 +1,20 @@
+{
+  "species": "magmortar",
+  "waves": 3,
+  "spawns_per_wave": 2,
+  "spawn_range": 30,
+  "biome": [
+    "minecraft:basalt_deltas",
+    "minecraft:crimson_forest",
+    "minecraft:nether_wastes",
+    "#cobblemon:is_hills",
+    "#cobblemon:is_volcanic"
+  ],
+  "experience_reward": 500,
+  "rewards": [
+    "cobblemon:ultra_ball",
+    "cobblemon:ultra_ball",
+    "cobblemon:rare_candy",
+    "cobblemon:rare_candy"
+  ]
+}

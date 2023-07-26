@@ -14,8 +14,13 @@ public class CobblemonOutbreaksConfig {
     }
 
     public static ForgeConfigSpec.ConfigValue<Boolean> OUTBREAK_PORTAL_SPAWN_SOUND;
+    public static ForgeConfigSpec.ConfigValue<Float> OUTBREAK_PORTAL_SPAWN_VOLUME;
+    public static ForgeConfigSpec.ConfigValue<Float> OUTBREAK_PORTAL_POKEMON_SPAWN_VOLUME;
     public static ForgeConfigSpec.ConfigValue<Integer> OUTBREAK_SPAWN_TIMER;
     public static ForgeConfigSpec.ConfigValue<Integer> OUTBREAK_SPAWN_COUNT;
+
+    public static ForgeConfigSpec.ConfigValue<Integer> OUTBREAKS_MAP_FLUSH_TIMER;
+    public static ForgeConfigSpec.ConfigValue<Integer> TEMP_OUTBREAKS_MAP_FLUSH_TIMER;
     public static ForgeConfigSpec.ConfigValue<Boolean> SEND_PORTAL_SPAWN_MESSAGE;
     public static ForgeConfigSpec.ConfigValue<Boolean> SPAWN_PORTAL_PARTICLES;
     public static ForgeConfigSpec.ConfigValue<Boolean> BIOME_SPECIFIC_SPAWNS;
@@ -33,6 +38,10 @@ public class CobblemonOutbreaksConfig {
         SPAWN_PORTAL_PARTICLES = builder.comment("Turn particles on or off for the outbreak portal, this will make it easier to find them").define("spawn_portal_particles", false);
         BIOME_SPECIFIC_SPAWNS = builder.comment("Whether or not the outbreaks should spawn in predetermined biomes").define("biome_specific_spawns", false);
         BIOME_SPECIFIC_SPAWNS_DEBUG = builder.comment("A message that tells you what biome an outbreak is currently spawning in with their pokemon and if you expected this").define("biome_specific_spawns_debug", false);
+        OUTBREAK_PORTAL_SPAWN_VOLUME = builder.comment("Volume of the spawning sound of the outbreak portal").define("outbreak_portal_spawn_volume", 1F);
+        OUTBREAK_PORTAL_POKEMON_SPAWN_VOLUME = builder.comment("Volume of the pokemon spawning sound of the outbreak portal").define("outbreak_portal_pokemon_spawn_volume", 0.2F);
+        OUTBREAKS_MAP_FLUSH_TIMER = builder.comment("Time it takes for the map with outbreaks to flush through, every 6 hours").define("outbreaks_flush_timer", 432000);
+        TEMP_OUTBREAKS_MAP_FLUSH_TIMER = builder.comment("Time it takes for the map with temporary outbreaks to flush through, every hour").define("temp_outbreaks_flush_timer", 72000);
 
         MIN_SPAWN_RADIUS = builder.comment("Minumum spawn radius the portal can spawn around the player, minumum is 16, maximum is 48").define("min_spawn_radius", 32);
         MAX_SPAWN_RADIUS = builder.comment("Maximum spawn radius the portal can spawn around the player, minumum is 49 maximum is 112").define("max_spaw_radius", 64);

@@ -23,6 +23,9 @@ public class LanguageGenerator extends LanguageProvider {
         add("cobblemonoutbreaks.gate_time_finished", "You have failed to finish the %s outbreak in time!");
         add("cobblemonoutbreaks.gate_not_able_to_load", "Was not able to load outbreak with the following resourcelocation %s, closing the gate!");
         add("cobblemonoutbreaks.portal_biome_specific_spawn_debug", "An outbreak has spawned near you in a %s with a %s");
+        add("cobblemonoutbreaks.unlucky_spawn_debug", "An outbreak failed to spawn due to its position being at y: %s ");
+        add("cobblemonoutbreaks.unlucky_spawn", "An outbreak tried to spawn near you, however you were unlucky..");
+        add("cobblemonoutbreaks.clearing_outbreaks_map", "Currently clearing the pokemon saved in the outbreaks. Any outbreaks in the world will spawn new pokemon or finish!");
     }
 
     @Override

@@ -63,14 +63,23 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     public OutbreakPortalEntity(Level level, Player placer,  ResourceLocation resourceLocation){
         super(COEntity.OUTBREAK_PORTAL.get(), level);
+        if(OutbreaksJsonDataManager.getBiomeData().isEmpty()){
+            if(!level.isClientSide)
+                OutbreaksJsonDataManager.populateMap((ServerLevel) level);
+        }
         populatePortalFromCommand(resourceLocation);
         sendMessageToPlayer(placer);
         this.ownerUUID = placer.getUUID();
     }
 
-    public OutbreakPortalEntity(Level level, Player placer) {
+    public OutbreakPortalEntity(Level level, Player placer, Vec3 position) {
         super(COEntity.OUTBREAK_PORTAL.get(), level);
-        setPos(findSuitableSpawnPoint(placer));
+        if(OutbreaksJsonDataManager.getBiomeData().isEmpty()){
+            if(!level.isClientSide)
+                OutbreaksJsonDataManager.populateMap((ServerLevel) level);
+        }
+
+        setPos(position);
         populatePortal();
         sendMessageToPlayer(placer);
         outbreakSpawnSound();
@@ -124,7 +133,8 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     public void outbreakSpawnSound(){
         if(CobblemonOutbreaksConfig.OUTBREAK_PORTAL_SPAWN_SOUND.get()) {
-            this.level.playSound(null, this.blockPosition(), SoundEvents.PORTAL_TRIGGER, SoundSource.AMBIENT, 1, 1);
+            float volume = CobblemonOutbreaksConfig.OUTBREAK_PORTAL_SPAWN_VOLUME.get();
+            this.level.playSound(null, this.blockPosition(), SoundEvents.PORTAL_TRIGGER, SoundSource.AMBIENT, volume, 1);
         }
     }
 
@@ -168,7 +178,7 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
     public void tick() {
         super.tick();
         if (!this.level.isClientSide) {
-            boolean containsPokemon = currentOutbreakWaveEntities.stream().anyMatch(uuid -> outbreakManager.containsUUID(uuid));
+            boolean containsPokemon = pokemonStillValid();
             if (getWave() >= this.getOutbreakPortal().getWaves() && !containsPokemon) {
                 if(!getHasSpawnedOne()){
                     if(this.ownerUUID != null && CobblemonOutbreaksConfig.SEND_PORTAL_SPAWN_MESSAGE.get()) {
@@ -214,11 +224,44 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
 
     }
 
+    /**
+     *
+     * An extra check every ten minutes to check if the world still has the pokemon and then remove it from the map
+     * Just an extra insurance to ensure that the portals wont be duds
+     *
+     * */
+    public boolean pokemonStillValid() {
+        if(this.level.isClientSide) return false;
+        ServerLevel serverLevel = (ServerLevel) this.level;
+        boolean containsPokemon = currentOutbreakWaveEntities.stream().anyMatch(uuid -> outbreakManager.containsUUID(uuid));
+        boolean worldHasPokemon = false;
+
+        if(tickCount % 12000 == 0) return containsPokemon;
+        Set<UUID> toRemove = new HashSet<>();
+        for(UUID uuid1 : currentOutbreakWaveEntities){
+            PokemonEntity entity = (PokemonEntity) serverLevel.getEntity(uuid1);
+            if(entity == null)
+            {
+                PokemonOutbreakManager pokemonOutbreakManager = PokemonOutbreakManager.get(serverLevel);
+                if(pokemonOutbreakManager.containsUUID(uuid1)){
+                    pokemonOutbreakManager.removePokemonUUID(uuid1);
+                }
+                toRemove.add(uuid1);
+            } else {
+                worldHasPokemon = true;
+            }
+        }
+
+        currentOutbreakWaveEntities.removeAll(toRemove);
+
+        return containsPokemon && worldHasPokemon;
+    }
+
     public void spawnWave() {
         List<Pokemon> spawned = this.getOutbreakPortal().spawnWave((ServerLevel) this.level, this.position(), this, this.getOutbreakPortal().getSpecies());
         for (Pokemon e : spawned) {
-            this.currentOutbreakWaveEntities.add(e.getUuid());
-            outbreakManager.addPokemonWOwner(e.getUuid(), this.getUUID());
+            this.currentOutbreakWaveEntities.add(e.getEntity().getUUID());
+            outbreakManager.addPokemonWOwner(e.getEntity().getUUID(), this.getUUID());
         }
 
         if(spawned.size() > 0){
@@ -400,6 +443,10 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         this.entityData.set(WAVE, wave);
     }
 
+    public UUID getOwnerUUID() {
+        return ownerUUID;
+    }
+
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -428,6 +475,9 @@ public class OutbreakPortalEntity extends Entity implements IEntityAdditionalSpa
         return false;
     }
 
+    public ResourceLocation getResourceLocation() {
+        return resourceLocation;
+    }
 
     public void removeFromSet(UUID pokemon) {
         this.currentOutbreakWaveEntities.remove(pokemon);
