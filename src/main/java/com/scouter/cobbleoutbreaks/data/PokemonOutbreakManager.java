@@ -7,15 +7,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PokemonOutbreakManager extends SavedData {
 
     // Map to store the ownership information of Pokemon
-    private Map<UUID, UUID> pokemonOwnershipMap = new HashMap<>();
-    private Map<UUID, UUID> pokemonOwnerShipMapTemp = new HashMap<>();
+    private Map<UUID, UUID> pokemonOwnershipMap = new ConcurrentHashMap<>();
+
+    private Map<UUID, UUID> pokemonOwnerShipMapTemp = new ConcurrentHashMap<>();
     public static PokemonOutbreakManager get(Level level){
         if (level.isClientSide) {
             throw new RuntimeException("Don't access this client-side!");

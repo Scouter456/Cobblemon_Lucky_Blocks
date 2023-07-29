@@ -7,14 +7,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OutbreakPlayerManager extends SavedData {
 
     // Map to store the remaining time for each player
-    private Map<UUID, Integer> timeLeftMap = new HashMap<>();
+    private Map<UUID, Integer> timeLeftMap = new ConcurrentHashMap<>();
 
     public static OutbreakPlayerManager get(Level level){
         if (level.isClientSide) {

@@ -14,8 +14,6 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 
-import java.util.Iterator;
-
 import static com.scouter.cobbleoutbreaks.CobblemonOutbreaks.prefix;
 
 public class SpawnLevelAlgorithms {

@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.mojang.logging.LogUtils;
 import com.scouter.cobbleoutbreaks.command.OutbreakPortalCommand;
 import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
+import com.scouter.cobbleoutbreaks.data.OutbreakManager;
 import com.scouter.cobbleoutbreaks.data.PokemonOutbreakManager;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortalEntity;
 import com.scouter.cobbleoutbreaks.events.ForgeEvents;
@@ -14,7 +15,6 @@ import com.scouter.cobbleoutbreaks.setup.Registration;
 import kotlin.Unit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -24,8 +24,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
 import java.util.Locale;
@@ -37,6 +35,7 @@ public class CobblemonOutbreaks {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static ServerLevel serverlevel;
+    public static boolean serverStarted = false;
 
     public CobblemonOutbreaks() {
         Registration.init();
@@ -47,10 +46,14 @@ public class CobblemonOutbreaks {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         modbus.addListener(ModSetup::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
+        forgeBus.addListener(ForgeEvents::serverStarting);
         forgeBus.addListener(ForgeEvents::serverStarted);
+        forgeBus.addListener(ForgeEvents::levelLoaded);
         MinecraftForge.EVENT_BUS.addListener(this::commands);
         MinecraftForge.EVENT_BUS.register(ForgeEvents.class);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::serverStarting);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::serverStarted);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::levelLoaded);
         CobblemonOutbreaks.pokemonCapture();
         CobblemonOutbreaks.pokemonKO();
     }
@@ -78,7 +81,10 @@ public class CobblemonOutbreaks {
             UUID pokemonUUID = event.getPokemon().getUuid();
             if (!outbreakManager.containsUUID(pokemonUUID)) return Unit.INSTANCE;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
-            OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
+
+            OutbreakManager outbreakManager1 = OutbreakManager.get(serverLevel);
+            OutbreakPortalEntity outbreakPortal = outbreakManager1.getOutbreakEntity(ownerUUID);
+
             if (outbreakPortal != null) {
                 outbreakPortal.removeFromSet(pokemonUUID);
             }
@@ -102,7 +108,8 @@ public class CobblemonOutbreaks {
             UUID pokemonUUID = event.getPokemon().getUuid();
             if (!outbreakManager.containsUUID(pokemonUUID)) return Unit.INSTANCE;
             UUID ownerUUID = outbreakManager.getOwnerUUID(pokemonUUID);
-            OutbreakPortalEntity outbreakPortal = (OutbreakPortalEntity) serverLevel.getEntity(ownerUUID);
+            OutbreakManager outbreakManager1 = OutbreakManager.get(serverLevel);
+            OutbreakPortalEntity outbreakPortal = outbreakManager1.getOutbreakEntity(ownerUUID);
             if (outbreakPortal != null) {
                 outbreakPortal.removeFromSet(pokemonUUID);
             }

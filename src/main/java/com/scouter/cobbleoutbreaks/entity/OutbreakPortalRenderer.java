@@ -1,4 +1,4 @@
-package com.scouter.cobbleoutbreaks.entity;
+/*package com.scouter.cobbleoutbreaks.entity;
 
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -14,3 +14,4 @@ public class OutbreakPortalRenderer extends EntityRenderer<OutbreakPortalEntity>
         return null;
     }
 }
+*/
