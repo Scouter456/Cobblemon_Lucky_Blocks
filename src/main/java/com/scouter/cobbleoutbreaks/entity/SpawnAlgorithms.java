@@ -59,7 +59,7 @@ public class SpawnAlgorithms {
         }
 
 
-        while (level.getBlockState(new BlockPos(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
+        while (level.getBlockState(BlockPos.containing(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
             y--;
         }
 
@@ -96,7 +96,7 @@ public class SpawnAlgorithms {
             z = pos.z() + scaleFactor * (level.random.nextDouble() - level.random.nextDouble()) * spawnRange + 0.5D;
         }
 
-        while (level.getBlockState(new BlockPos(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
+        while (level.getBlockState(BlockPos.containing(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
             y--;
         }
 
@@ -124,7 +124,7 @@ public class SpawnAlgorithms {
         double x = pos.x() - spawnRange / 2;
         double y = pos.y();
         double z = pos.z() - spawnRange / 2;
-        BlockPos blockPos = new BlockPos(x, y, z);
+        BlockPos blockPos = BlockPos.containing(x, y, z);
 
         boolean spawnPosFound = false; // Flag to track if a valid spawn position is found
 
@@ -134,9 +134,9 @@ public class SpawnAlgorithms {
                 double currentZ = z + j;
 
                 if (i % 2 == j % 2) {
-                    level.setBlock(new BlockPos(currentX, -40, currentZ), Blocks.WHITE_WOOL.defaultBlockState(), 3);
+                    level.setBlock(BlockPos.containing(currentX, -40, currentZ), Blocks.WHITE_WOOL.defaultBlockState(), 3);
                 } else {
-                    level.setBlock(new BlockPos(currentX, -40, currentZ), Blocks.BLACK_WOOL.defaultBlockState(), 3);
+                    level.setBlock(BlockPos.containing(currentX, -40, currentZ), Blocks.BLACK_WOOL.defaultBlockState(), 3);
 
                     boolean setSpawnPos = level.random.nextInt(0, 100) <= 15;
                     LOGGER.info("canSpawn? " + setSpawnPos);
@@ -153,7 +153,7 @@ public class SpawnAlgorithms {
                         if (changeModZ) {
                             zMod = -zMod;
                         }
-                        blockPos = new BlockPos(x + xMod, y, z + zMod);
+                        blockPos = BlockPos.containing(x + xMod, y, z + zMod);
                         spawnPosFound = true;
                         break;
                     }
@@ -165,14 +165,14 @@ public class SpawnAlgorithms {
             }
         }
 
-        while (level.getBlockState(new BlockPos(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
+        while (level.getBlockState(BlockPos.containing(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
             y--;
         }
 
         while (!level.noCollision(getAABB(x, y, z, pokemon))) {
             y++;
         }
-        blockPos = new BlockPos(blockPos.getX(), y, blockPos.getZ());
+        blockPos = BlockPos.containing(blockPos.getX(), y, blockPos.getZ());
         if (outbreakPortal.distanceToSqr(x, y, z) > outbreakPortal.getOutbreakPortal().getLeashRangeSq()) return null;
         if (level.noCollision(getAABB(x, y, z, pokemon))) return Vec3.atCenterOf(blockPos);
 
@@ -197,7 +197,7 @@ public class SpawnAlgorithms {
             z = z + (level.random.nextDouble() - level.random.nextDouble()) * spawnRange + 0.5D;
         }
 
-        while (level.getBlockState(new BlockPos(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
+        while (level.getBlockState(BlockPos.containing(x, y - 1, z)).isAir() && y > level.getMinBuildHeight()) {
             y--;
         }
 

@@ -9,6 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.scouter.cobbleoutbreaks.config.CobblemonOutbreaksConfig;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -34,7 +35,7 @@ public class OutbreakPortal {
                     Codec.STRING.fieldOf("species").forGetter(t -> t.species),
                     Codec.INT.fieldOf("waves").forGetter(w -> w.waves),
                     Codec.intRange(1, 64).fieldOf("spawns_per_wave").forGetter(s -> s.spawnsPerWave),
-                    Registry.ITEM.byNameCodec().listOf().optionalFieldOf("rewards", Collections.emptyList()).forGetter(i -> i.rewards),
+                    BuiltInRegistries.ITEM.byNameCodec().listOf().optionalFieldOf("rewards", Collections.emptyList()).forGetter(i -> i.rewards),
                     Codec.doubleRange(1,10000000).optionalFieldOf("shiny_chance",1024D).forGetter(r -> r.shinyChance),
                     Codec.INT.optionalFieldOf("experience_reward", 0).forGetter(e -> e.experience),
                     Codec.doubleRange(15D,40D).fieldOf("spawn_range").forGetter(r -> r.spawnRange),
@@ -227,10 +228,10 @@ public class OutbreakPortal {
             }
             // If the species is something it can't find, it will put out a random Pokémon. We try to catch that here,
             // this can be due to an error in the JSON.
-            if (!pokemonProp.getSpecies().toString().equals(outbreakPortalEntity.getOutbreakPortal().getSpecies())) {
-                outbreakPortalEntity.entityNotSimilar(pokemonProp.create(), outbreakPortalEntity);
-                return Collections.emptyList();
-            }
+            //if (!pokemonProp.getSpecies().toString().equals(outbreakPortalEntity.getOutbreakPortal().getSpecies())) {
+            //    outbreakPortalEntity.entityNotSimilar(pokemonProp.create(), outbreakPortalEntity);
+            //    return Collections.emptyList();
+            //}
 
             double shinyChance = 1 / outbreakPortalEntity.getOutbreakPortal().getShinyChance();
             if (level.random.nextDouble() < shinyChance) {

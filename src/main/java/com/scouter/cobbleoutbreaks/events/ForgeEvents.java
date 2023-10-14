@@ -60,8 +60,8 @@ public class ForgeEvents {
 
 
 
-        if(!serverPlayer.level.isClientSide){
-        OutbreakPlayerManager outbreakPlayerManager = OutbreakPlayerManager.get((ServerLevel) serverPlayer.getLevel());
+        if(!serverPlayer.level().isClientSide){
+        OutbreakPlayerManager outbreakPlayerManager = OutbreakPlayerManager.get((ServerLevel) serverPlayer.level());
         // Check if the player's UUID is not present in the outbreak player manager and set the initial timer.
         if (!outbreakPlayerManager.containsUUID(serverPlayer.getUUID()))
             outbreakPlayerManager.setTimeLeft(serverPlayer.getUUID(), outbreakTimer);
@@ -77,25 +77,25 @@ public class ForgeEvents {
 
 
             int y = (int) pos.getY();
-            if (serverPlayer.level.dimension() == Level.NETHER) {
+            if (serverPlayer.level().dimension() == Level.NETHER) {
                 if (y <= 0) {
                     sendMessageToPlayer(serverPlayer, y);
                     continue;
                 }
             }
-            if (serverPlayer.level.dimension() == Level.END) {
+            if (serverPlayer.level().dimension() == Level.END) {
                 if (y <= 0) {
                     sendMessageToPlayer(serverPlayer, y);
                     continue;
                 }
             }
-            if (serverPlayer.level.dimension() == Level.OVERWORLD) {
+            if (serverPlayer.level().dimension() == Level.OVERWORLD) {
                 if (y <= -64) {
                     sendMessageToPlayer(serverPlayer, y);
                     continue;
                 }
             }
-            OutbreakPortalEntity outbreakPortal = new OutbreakPortalEntity(serverPlayer.getLevel(), serverPlayer, pos);
+            OutbreakPortalEntity outbreakPortal = new OutbreakPortalEntity(serverPlayer.level(), serverPlayer, pos);
         }
 
             //serverPlayer.level.addFreshEntity(outbreakPortal);
@@ -135,8 +135,8 @@ public class ForgeEvents {
             minRange = 32;
         }
 
-        int randomX = player.level.random.nextInt(minRange) + (player.level.random.nextBoolean() ? 5 : -5);
-        int randomZ = player.level.random.nextInt(maxRange) + (player.level.random.nextBoolean() ? 5 : -5);
+        int randomX = player.level().random.nextInt(minRange) + (player.level().random.nextBoolean() ? 5 : -5);
+        int randomZ = player.level().random.nextInt(maxRange) + (player.level().random.nextBoolean() ? 5 : -5);
 
 
 
@@ -144,8 +144,8 @@ public class ForgeEvents {
         int playerPosY = player.getBlockY();
         int playerPosZ = player.getBlockZ();
 
-        boolean changeModX = player.level.random.nextBoolean();
-        boolean changeModZ = player.level.random.nextBoolean();
+        boolean changeModX = player.level().random.nextBoolean();
+        boolean changeModZ = player.level().random.nextBoolean();
 
         if(changeModX){
             randomX = -randomX;
@@ -155,12 +155,12 @@ public class ForgeEvents {
             randomZ = -randomZ;
         }
         int y = (int)player.getY();
-        while ((player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
-                (!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && !player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
-                (!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level.getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir())) {
+        while ((player.level().getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level().getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
+                (!player.level().getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && !player.level().getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir()) ||
+                (!player.level().getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).isAir() && player.level().getBlockState(new BlockPos(playerPosX + randomX, y - 1, playerPosZ + randomZ)).isAir())) {
 
             if(y < -64) break;
-            if(!player.level.getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).getFluidState().isEmpty()) break;
+            if(!player.level().getBlockState(new BlockPos(playerPosX + randomX, y, playerPosZ + randomZ)).getFluidState().isEmpty()) break;
             y--;
         }
 

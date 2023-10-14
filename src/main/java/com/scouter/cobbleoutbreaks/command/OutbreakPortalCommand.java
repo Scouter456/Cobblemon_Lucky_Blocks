@@ -50,7 +50,7 @@ public class OutbreakPortalCommand {
         try {
             Entity nullableSummoner = c.getSource().getEntity();
             Player summoner = nullableSummoner instanceof Player ? (Player) nullableSummoner : c.getSource().getLevel().getNearestPlayer(pos.x(), pos.y(), pos.z(), 64, false);
-            BlockPos blockPos = new BlockPos(pos);
+            BlockPos blockPos = BlockPos.containing(pos.x(), pos.y(), pos.z());
             OutbreakPortalEntity outbreakPortalEntity = new OutbreakPortalEntity(c.getSource().getLevel(), summoner, type, blockPos);
             outbreakPortalEntity.setBlockPosition(pos);
 

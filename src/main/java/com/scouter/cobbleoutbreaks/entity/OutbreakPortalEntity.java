@@ -109,9 +109,15 @@ public class OutbreakPortalEntity {
             if(CobblemonOutbreaksConfig.BIOME_SPECIFIC_SPAWNS_DEBUG.get()) {
                 MutableComponent pokemonMessage = Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
                 MutableComponent biomeMessage = Component.literal(level.getBiome(this.blockPosition).unwrapKey().get().location().toString().split(":")[1]).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
-                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_biome_specific_spawn_debug", biomeMessage,pokemonMessage).withStyle(ChatFormatting.GREEN);
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_biome_specific_spawn_debug", biomeMessage,this.blockPosition,pokemonMessage).withStyle(ChatFormatting.GREEN);
                 player.sendSystemMessage(outBreakMessage);
-            } else{
+            } else if(!CobblemonOutbreaksConfig.BIOME_SPECIFIC_SPAWNS_DEBUG.get()){
+                MutableComponent pokemonMessage =  Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                MutableComponent blockPos =  Component.literal(String.valueOf(this.blockPosition)).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
+                MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_spawn_near_blockpos", blockPos, pokemonMessage).withStyle(ChatFormatting.DARK_AQUA);
+
+                player.sendSystemMessage(outBreakMessage);
+            } else {
                 MutableComponent outBreakMessage = Component.translatable("cobblemonoutbreaks.portal_spawn_near").withStyle(ChatFormatting.DARK_AQUA);
                 MutableComponent pokemonMessage =  Component.literal(this.getOutbreakPortal().getSpecies()).withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC);
                 player.sendSystemMessage(outBreakMessage.append(pokemonMessage));
@@ -429,7 +435,7 @@ public class OutbreakPortalEntity {
     }
 
     public void setBlockPosition(Vec3 blockPosition) {
-        BlockPos pos = new BlockPos(blockPosition);
+        BlockPos pos = BlockPos.containing(blockPosition.x(), blockPosition.y(), blockPosition.z());
         this.blockPosition = pos;
     }
 

@@ -5,8 +5,9 @@
   "cobblemonoutbreaks.gate_finished": "The outbreak with %s has finished!",
   "cobblemonoutbreaks.gate_not_able_to_load": "Was not able to load outbreak with the following resourcelocation %s, closing the gate!",
   "cobblemonoutbreaks.gate_time_finished": "You have failed to finish the %s outbreak in time!",
-  "cobblemonoutbreaks.portal_biome_specific_spawn_debug": "An outbreak has spawned near you in a %s with a %s",
+  "cobblemonoutbreaks.portal_biome_specific_spawn_debug": "An outbreak has spawned near you in a %s at position %s with a %s",
   "cobblemonoutbreaks.portal_spawn_near": "An outbreak has spawned close to you with a ",
+  "cobblemonoutbreaks.portal_spawn_near_blockpos": "An outbreak has spawned at %s with a %s",
   "cobblemonoutbreaks.unlucky_spawn": "An outbreak tried to spawn near you, however you were unlucky..",
   "cobblemonoutbreaks.unlucky_spawn_debug": "An outbreak failed to spawn due to its position being at y: %s "
 }

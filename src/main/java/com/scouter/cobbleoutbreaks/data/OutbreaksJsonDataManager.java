@@ -7,6 +7,8 @@ import com.mojang.serialization.JsonOps;
 import com.scouter.cobbleoutbreaks.entity.OutbreakPortal;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -103,8 +105,8 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
             List<ResourceLocation> tagsRL = portal.getSpawnBiomeTags();
             List<ResourceLocation> biomesRL = portal.getSpawnBiome();
             for (ResourceLocation tag : tagsRL) {
-                TagKey<Biome> biomeTagKey = TagKey.create(Registry.BIOME_REGISTRY, tag);
-                level.registryAccess().registry(Registry.BIOME_REGISTRY).ifPresent(reg -> {
+                TagKey<Biome> biomeTagKey = TagKey.create(Registries.BIOME, tag);
+                level.registryAccess().registry(Registries.BIOME).ifPresent(reg -> {
                     Iterable<Holder<Biome>> biomeHolder = reg.getTagOrEmpty(biomeTagKey);
                     for(Holder<Biome> biome : biomeHolder){
                         ResourceKey<Biome> biomeResourceKey = biome.unwrapKey().get();
@@ -127,7 +129,7 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
             for (ResourceLocation biome : biomesRL) {
                 ResourceKey<Biome> biomeResourceKey = null;
                 try {
-                    biomeResourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome);
+                    biomeResourceKey = ResourceKey.create(Registries.BIOME, biome);
                 } catch (Exception e) {
                     LOGGER.error("Could not find biome {} in portal for {} due to {}", biome, portal.getJsonLocation(), e);
                 }
@@ -186,7 +188,7 @@ public class OutbreaksJsonDataManager extends SimpleJsonResourceReloadListener {
                         spawnBiome.forEach(biome -> {
                             ResourceKey<Biome> biomeResourceKey = null;
                             try {
-                                biomeResourceKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome);
+                                biomeResourceKey = ResourceKey.create(Registries.BIOME, biome);
                             } catch (Exception e) {
                                 LOGGER.error("Could not find biome {} in {} due to ", biome, key, e);
                             }
