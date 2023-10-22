@@ -2,5 +2,5 @@
   "block.cobblelucky.cobblemon_lucky_block": "Cobblemon Lucky Block",
   "block.cobblelucky.cobblemon_lucky_item_block": "Cobblemon Lucky Item Block",
   "cobblelucky.item_fail.get": "You failed to obtain an item!",
-  "itemGroup.cobblelucky.cobblemon_lucky_block": "Cobblemon Lucky Blocks"
+  "itemGroup.cl": "Cobblemon Lucky Blocks"
 }

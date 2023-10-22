@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "F": {
       "item": "cobblemon:focus_band"
@@ -27,5 +28,6 @@
   ],
   "result": {
     "item": "cobblelucky:cobblemon_lucky_block"
-  }
+  },
+  "show_notification": true
 }

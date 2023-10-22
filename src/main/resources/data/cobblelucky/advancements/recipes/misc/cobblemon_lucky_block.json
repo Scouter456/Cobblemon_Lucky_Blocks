@@ -1,0 +1,87 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_charcoal": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:charcoal_stick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_dream_ball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:dream_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_focus_band": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:focus_band"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_never_melt_ice": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:never_melt_ice"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_pokeball": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "cobblemon:poke_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "cobblelucky:cobblemon_lucky_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_focus_band",
+      "has_dream_ball",
+      "has_charcoal",
+      "has_never_melt_ice",
+      "has_pokeball",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "cobblelucky:cobblemon_lucky_block"
+    ]
+  },
+  "sends_telemetry_event": false
+}

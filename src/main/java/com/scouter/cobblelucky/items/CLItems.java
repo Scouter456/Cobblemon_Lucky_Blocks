@@ -3,6 +3,7 @@ package com.scouter.cobblelucky.items;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -23,12 +24,12 @@ public class CLItems {
     public static final Item COBBLEMON_LUCKY_ITEM_BLOCK = registerBlockItem(CLBlocks.COBBLEMON_LUCKY_ITEM_BLOCK);
 
     private static Item registerItem(String name, Item item) {
-        return Registry.register(Registry.ITEM, prefix(name), item);
+        return Registry.register(BuiltInRegistries.ITEM, prefix(name), item);
     }
 
     private static Item registerBlockItem(Block block){
-        return Registry.register(Registry.ITEM, prefix(block.getDescriptionId().replace("block.cobblelucky.", "").toString()),
-                new BlockItem(block, new FabricItemSettings().group(Registration.defaultBuilder).fireproof()));
+        return Registry.register(BuiltInRegistries.ITEM, prefix(block.getDescriptionId().replace("block.cobblelucky.", "").toString()),
+                new BlockItem(block, new FabricItemSettings().fireproof()));
     }
     public static void ITEMS(){
         LOGGER.info("Registering Items for " + CobbleLucky.MODID);

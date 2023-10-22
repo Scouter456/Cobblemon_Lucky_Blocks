@@ -1,13 +1,12 @@
 package com.scouter.cobblelucky;
 
 import com.scouter.cobblelucky.setup.ClientSetup;
+import com.scouter.cobblelucky.setup.Registration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.resources.ResourceLocation;
-import com.scouter.cobblelucky.setup.Registration;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
