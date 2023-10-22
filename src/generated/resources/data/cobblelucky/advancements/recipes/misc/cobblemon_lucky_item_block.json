@@ -82,5 +82,6 @@
     "recipes": [
       "cobblelucky:cobblemon_lucky_item_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

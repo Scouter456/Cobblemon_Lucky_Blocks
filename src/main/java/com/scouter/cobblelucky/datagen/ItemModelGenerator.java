@@ -2,34 +2,24 @@ package com.scouter.cobblelucky.datagen;
 
 import com.scouter.cobblelucky.CobbleLucky;
 import com.scouter.cobblelucky.blocks.CLBlocks;
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import static com.scouter.cobblelucky.CobbleLucky.prefix;
 
 public class ItemModelGenerator extends ItemModelProvider {
-    public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper){
-        super(generator, CobbleLucky.MODID, existingFileHelper);
+    public ItemModelGenerator(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, CobbleLucky.MODID, existingFileHelper);
     }
 
     @Override
     protected void registerModels(){
-        for (Item i : Registry.ITEM) {
-            if (i instanceof SpawnEggItem && ForgeRegistries.ITEMS.getKey(i).getNamespace().equals(CobbleLucky.MODID)) {
-                getBuilder(ForgeRegistries.ITEMS.getKey(i).getPath())
-                        .parent(getExistingFile(new ResourceLocation("item/template_spawn_egg")));
-            }
-        }
-
         toBlock(CLBlocks.COBBLEMON_LUCKY_BLOCK);
         toBlock(CLBlocks.COBBLEMON_LUCKY_ITEM_BLOCK);
     }

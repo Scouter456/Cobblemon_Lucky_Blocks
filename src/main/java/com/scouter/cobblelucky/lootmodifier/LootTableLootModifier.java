@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+import static net.minecraft.world.level.storage.loot.LootTable.createStackSplitter;
+
 public class LootTableLootModifier extends LootModifier {
     public static final Supplier<Codec<LootTableLootModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(inst -> codecStart(inst)
@@ -30,9 +32,8 @@ public class LootTableLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        LootTable extraTable = context.getLootTable(this.lootTableId);
-
-        extraTable.getRandomItems(context, generatedLoot::add);
+        LootTable extraTable = context.getResolver().getLootTable(this.lootTableId);
+        extraTable.getRandomItemsRaw(context, createStackSplitter(context.getLevel(), generatedLoot::add));
         return generatedLoot;
     }
 

@@ -3,8 +3,7 @@ package com.scouter.cobblelucky.datagen;
 import com.mojang.logging.LogUtils;
 import com.scouter.cobblelucky.CobbleLucky;
 import com.scouter.cobblelucky.blocks.CLBlocks;
-import com.scouter.cobblelucky.items.CLItems;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -13,8 +12,8 @@ import org.slf4j.Logger;
 import java.util.function.Supplier;
 
 public class LanguageGenerator extends LanguageProvider {
-    public LanguageGenerator(DataGenerator gen){
-        super(gen, CobbleLucky.MODID, "en_us");
+    public LanguageGenerator(PackOutput output) {
+        super(output, CobbleLucky.MODID, "en_us");
     }
     private static final Logger LOGGER = LogUtils.getLogger();
     @Override
@@ -25,7 +24,7 @@ public class LanguageGenerator extends LanguageProvider {
         addBlock(CLBlocks.COBBLEMON_LUCKY_ITEM_BLOCK, "Cobblemon Lucky Item Block");
 
         //TABS
-        addTabName(CLItems.creativeTab, "Cobblemon Lucky Blocks");
+        add("itemGroup.cl", "Cobblemon Lucky Blocks");
 
         add("cobblelucky.item_fail.get", "You failed to obtain an item!");
     }

@@ -2,7 +2,6 @@ package com.scouter.cobblelucky.lootmodifier;
 
 import com.mojang.serialization.Codec;
 import com.scouter.cobblelucky.CobbleLucky;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
